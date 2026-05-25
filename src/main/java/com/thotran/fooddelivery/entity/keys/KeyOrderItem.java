@@ -1,4 +1,4 @@
-﻿package com.thotran.fooddelivery.entity.keys;
+package com.thotran.fooddelivery.entity.keys;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

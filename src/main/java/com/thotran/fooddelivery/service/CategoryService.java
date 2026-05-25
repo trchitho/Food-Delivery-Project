@@ -1,4 +1,4 @@
-﻿package com.thotran.fooddelivery.service;
+package com.thotran.fooddelivery.service;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -9,8 +9,6 @@ import com.thotran.fooddelivery.entity.Food;
 import com.thotran.fooddelivery.repository.CategoryRepository;
 import com.thotran.fooddelivery.service.imp.CategoryServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -44,8 +42,7 @@ public class CategoryService implements CategoryServiceImp {
 
         if(dataRedis == null){
 
-            PageRequest pageRequest = PageRequest.of(0, 4, Sort.by("id"));
-            Page<Category> categoryList = categoryRepository.findAll(pageRequest);
+            List<Category> categoryList = categoryRepository.findAll(Sort.by("id"));
 
             for (Category data : categoryList){
                 CategoryDto categoryDto = new CategoryDto();
@@ -59,6 +56,12 @@ public class CategoryService implements CategoryServiceImp {
                     menuDto.setTitle(dataFood.getTitle());
                     menuDto.setFreeShip(dataFood.isFreeShip());
                     menuDto.setImage(dataFood.getImage());
+                    menuDto.setDescription(dataFood.getDesccription());
+                    menuDto.setPrice(dataFood.getPrice());
+                    if (dataFood.getRestaurant() != null) {
+                        menuDto.setRestaurantId(dataFood.getRestaurant().getId());
+                        menuDto.setRestaurantTitle(dataFood.getRestaurant().getTitle());
+                    }
 
                     menuDtos.add(menuDto);
                 }

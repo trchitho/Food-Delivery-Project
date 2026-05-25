@@ -1,4 +1,4 @@
-﻿package com.thotran.fooddelivery.dto;
+package com.thotran.fooddelivery.dto;
 
 import java.util.Date;
 import java.util.List;
@@ -14,6 +14,7 @@ public class RestaurantDto {
     private Date openDate;
     private String address;
     List<CategoryDto> categories;
+    private List<String> categoryNames;
 
     public String getDescription() {
         return description;
@@ -45,6 +46,14 @@ public class RestaurantDto {
 
     public void setCategories(List<CategoryDto> categories) {
         this.categories = categories;
+    }
+
+    public List<String> getCategoryNames() {
+        return categoryNames;
+    }
+
+    public void setCategoryNames(List<String> categoryNames) {
+        this.categoryNames = categoryNames;
     }
 
     public int getId() {

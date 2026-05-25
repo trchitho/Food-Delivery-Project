@@ -1,4 +1,4 @@
-﻿package com.thotran.fooddelivery.payload.request;
+package com.thotran.fooddelivery.payload.request;
 
 public class LoginRequest {
     private String username;

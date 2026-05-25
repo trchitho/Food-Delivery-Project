@@ -1,4 +1,4 @@
-﻿package com.thotran.fooddelivery.utils;
+package com.thotran.fooddelivery.utils;
 
 import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;

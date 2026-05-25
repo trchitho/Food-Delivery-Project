@@ -1,4 +1,4 @@
-﻿package com.thotran.fooddelivery.entity;
+package com.thotran.fooddelivery.entity;
 
 import jakarta.persistence.*;
 

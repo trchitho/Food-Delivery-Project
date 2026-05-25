@@ -1,4 +1,4 @@
-﻿package com.thotran.fooddelivery.payload.request;
+package com.thotran.fooddelivery.payload.request;
 
 public class OrderRequest {
     private int userId;

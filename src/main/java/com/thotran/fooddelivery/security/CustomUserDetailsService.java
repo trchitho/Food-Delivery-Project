@@ -1,4 +1,4 @@
-﻿package com.thotran.fooddelivery.security;
+package com.thotran.fooddelivery.security;
 
 import com.thotran.fooddelivery.entity.Users;
 import com.thotran.fooddelivery.repository.UserRepository;

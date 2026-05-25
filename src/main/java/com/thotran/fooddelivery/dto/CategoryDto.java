@@ -1,4 +1,4 @@
-﻿package com.thotran.fooddelivery.dto;
+package com.thotran.fooddelivery.dto;
 
 import java.util.List;
 

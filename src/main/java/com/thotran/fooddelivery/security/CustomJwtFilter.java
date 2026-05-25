@@ -1,4 +1,4 @@
-﻿package com.thotran.fooddelivery.security;
+package com.thotran.fooddelivery.security;
 
 import com.thotran.fooddelivery.utils.JwtUtilsHelper;
 import jakarta.servlet.FilterChain;

@@ -1,4 +1,4 @@
-﻿package com.thotran.fooddelivery.service;
+package com.thotran.fooddelivery.service;
 
 import com.thotran.fooddelivery.dto.CategoryDto;
 import com.thotran.fooddelivery.dto.MenuDto;
@@ -11,8 +11,6 @@ import com.thotran.fooddelivery.repository.RestaurantRepository;
 import com.thotran.fooddelivery.service.imp.FileServiceImp;
 import com.thotran.fooddelivery.service.imp.RestaurantServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -57,8 +55,7 @@ public class RestaurantService implements RestaurantServiceImp {
     @Override
     public List<RestaurantDto> getRestaurantList() {
         List<RestaurantDto> restaurantDtos = new ArrayList<>();
-        PageRequest pageRequest = PageRequest.of(0, 4);
-        Page<Restaurant> restaurantList = restaurantRepository.findAll(pageRequest);
+        List<Restaurant> restaurantList = restaurantRepository.findAll();
 
         for (Restaurant restaurant : restaurantList){
             RestaurantDto restaurantDto = new RestaurantDto();
@@ -66,8 +63,16 @@ public class RestaurantService implements RestaurantServiceImp {
             restaurantDto.setImage(restaurant.getImage());
             restaurantDto.setTitle(restaurant.getTitle());
             restaurantDto.setSubtitle(restaurant.getSubtitle());
+            restaurantDto.setDescription(restaurant.getDescription());
+            restaurantDto.setAddress(restaurant.getAddress());
+            restaurantDto.setOpenDate(restaurant.getOpenDate());
             restaurantDto.setFreeShip(restaurant.isFreeShip());
             restaurantDto.setRating(calculatorRating(restaurant.getRatingRestaurants()));
+            List<String> categoryNames = new ArrayList<>();
+            for (RestaurantCategory restaurantCategory : restaurant.getRestaurantCategories()){
+                categoryNames.add(restaurantCategory.getCategory().getCategoryName());
+            }
+            restaurantDto.setCategoryNames(categoryNames);
 
             restaurantDtos.add(restaurantDto);
         }
@@ -75,6 +80,9 @@ public class RestaurantService implements RestaurantServiceImp {
     }
 
     private double calculatorRating(Set<RatingRestaurant> ratingList){
+        if (ratingList == null || ratingList.isEmpty()){
+            return 0;
+        }
         double totalPoint = 0;
         for (RatingRestaurant data : ratingList){
             totalPoint += data.getRatingPoint();
@@ -108,6 +116,9 @@ public class RestaurantService implements RestaurantServiceImp {
                 categoryDto.setId(restaurantCategory.getCategory().getId());
 
                 for (Food food : restaurantCategory.getCategory().getFoodList()){
+                    if (food.getRestaurant() == null || food.getRestaurant().getId() != data.getId()){
+                        continue;
+                    }
                     MenuDto menuDto = new MenuDto();
                     menuDto.setId(food.getId());
                     menuDto.setImage(food.getImage());
@@ -115,6 +126,8 @@ public class RestaurantService implements RestaurantServiceImp {
                     menuDto.setTitle(food.getTitle());
                     menuDto.setDescription(food.getDesccription());
                     menuDto.setPrice(food.getPrice());
+                    menuDto.setRestaurantId(data.getId());
+                    menuDto.setRestaurantTitle(data.getTitle());
 
                     menuDtoList.add(menuDto);
                 }

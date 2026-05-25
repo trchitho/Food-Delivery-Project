@@ -1,4 +1,4 @@
-﻿package com.thotran.fooddelivery.entity;
+package com.thotran.fooddelivery.entity;
 
 import com.thotran.fooddelivery.entity.keys.KeyRestaurantCategory;
 import jakarta.persistence.*;

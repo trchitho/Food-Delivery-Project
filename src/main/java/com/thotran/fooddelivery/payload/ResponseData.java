@@ -1,4 +1,4 @@
-﻿package com.thotran.fooddelivery.payload;
+package com.thotran.fooddelivery.payload;
 
 public class ResponseData {
     private int status = 200;

@@ -1,4 +1,4 @@
-﻿package com.thotran.fooddelivery.controller;
+package com.thotran.fooddelivery.controller;
 
 import com.thotran.fooddelivery.payload.ResponseData;
 import com.thotran.fooddelivery.service.imp.FileServiceImp;

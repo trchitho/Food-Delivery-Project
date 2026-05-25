@@ -1,4 +1,4 @@
-﻿package com.thotran.fooddelivery.dto;
+package com.thotran.fooddelivery.dto;
 
 public class MenuDto {
     private int id;
@@ -7,6 +7,8 @@ public class MenuDto {
     private boolean isFreeShip;
     private String description;
     private double price;
+    private int restaurantId;
+    private String restaurantTitle;
 
     public int getId() {
         return id;
@@ -26,6 +28,22 @@ public class MenuDto {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public int getRestaurantId() {
+        return restaurantId;
+    }
+
+    public void setRestaurantId(int restaurantId) {
+        this.restaurantId = restaurantId;
+    }
+
+    public String getRestaurantTitle() {
+        return restaurantTitle;
+    }
+
+    public void setRestaurantTitle(String restaurantTitle) {
+        this.restaurantTitle = restaurantTitle;
     }
 
     public void setId(int id) {

@@ -1,4 +1,4 @@
-﻿package com.thotran.fooddelivery.service;
+package com.thotran.fooddelivery.service;
 
 import com.thotran.fooddelivery.service.imp.FileServiceImp;
 import org.springframework.beans.factory.annotation.Value;
