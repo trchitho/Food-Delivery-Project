@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
+import { Menu, Transition } from '@headlessui/react'
 import { BellIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { clearCurrentUser, getCurrentUser } from '../../utils/foodData'
@@ -15,11 +16,17 @@ const ADMIN_NAV = [
   { label: 'Cài đặt', href: '/admin/setting', icon: '⚙' },
 ]
 
+function classNames(...classes) {
+  return classes.filter(Boolean).join(' ')
+}
+
 function NavbarAdmin({ title = 'Bảng điều khiển', subtitle = '', action, children }) {
   const location = useLocation()
   const navigate = useNavigate()
   const currentUser = getCurrentUser()
   const [adminAlerts, setAdminAlerts] = useState(0)
+  const [adminNotifications, setAdminNotifications] = useState([])
+  const recentAdminNotifications = adminNotifications.slice(0, 5)
   const [collapsed, setCollapsed] = useState(() => localStorage.getItem('adminSidebarCollapsed') === 'true')
 
   useEffect(() => {
@@ -27,8 +34,10 @@ function NavbarAdmin({ title = 'Bảng điều khiển', subtitle = '', action, 
       let count = 0
       try {
         const notifications = JSON.parse(localStorage.getItem('notifications:admin') || '[]')
+        setAdminNotifications(notifications)
         count += notifications.filter((item) => !item.read).length
       } catch {
+        setAdminNotifications([])
         // Ignore invalid admin notification cache.
       }
       setAdminAlerts(count)
@@ -132,10 +141,70 @@ function NavbarAdmin({ title = 'Bảng điều khiển', subtitle = '', action, 
               </div>
               <div className="flex items-center gap-3">
                 {action}
-                <Link to="/notifications" title="Thông báo" className="relative hidden h-10 w-10 place-items-center rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 sm:grid">
-                  <BellIcon className="h-5 w-5" />
-                  {adminAlerts > 0 && <span className="absolute -right-2 -top-2 grid h-5 min-w-5 place-items-center rounded-full bg-red-500 px-1 text-[11px] text-white">{adminAlerts > 9 ? '9+' : adminAlerts}</span>}
-                </Link>
+                <Menu as="div" className="relative hidden sm:block">
+                  <Menu.Button title="Thông báo" className="relative grid h-10 w-10 place-items-center rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-orange-300">
+                    <BellIcon className="h-5 w-5" />
+                    {adminAlerts > 0 && <span className="absolute -right-2 -top-2 grid h-5 min-w-5 place-items-center rounded-full bg-red-500 px-1 text-[11px] font-bold text-white">{adminAlerts > 9 ? '9+' : adminAlerts}</span>}
+                  </Menu.Button>
+                  <Transition
+                    as={Fragment}
+                    enter="transition ease-out duration-100"
+                    enterFrom="transform opacity-0 scale-95"
+                    enterTo="transform opacity-100 scale-100"
+                    leave="transition ease-in duration-75"
+                    leaveFrom="transform opacity-100 scale-100"
+                    leaveTo="transform opacity-0 scale-95"
+                  >
+                    <Menu.Items className="absolute right-0 z-40 mt-3 w-96 origin-top-right overflow-hidden rounded-2xl bg-white shadow-xl ring-1 ring-black/5 focus:outline-none">
+                      <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3">
+                        <p className="text-sm font-black text-slate-950">Thông báo quản trị</p>
+                        <Menu.Item>
+                          {({ active }) => (
+                            <Link
+                              to="/notifications"
+                              className={classNames(active ? 'bg-orange-50 text-orange-700' : 'text-orange-600', 'rounded-lg px-2 py-1 text-xs font-bold')}
+                            >
+                              Xem tất cả
+                            </Link>
+                          )}
+                        </Menu.Item>
+                      </div>
+                      <div className="max-h-96 overflow-y-auto">
+                        {recentAdminNotifications.length === 0 ? (
+                          <div className="px-4 py-5 text-sm text-slate-500">
+                            Chưa có thông báo quản trị mới.
+                          </div>
+                        ) : (
+                          recentAdminNotifications.map((item) => (
+                            <Menu.Item key={item.id}>
+                              {({ active }) => (
+                                <Link
+                                  to="/notifications"
+                                  className={classNames(
+                                    active ? 'bg-slate-50' : '',
+                                    !item.read ? 'bg-orange-50/70' : 'bg-white',
+                                    'block border-b border-slate-100 px-4 py-3 last:border-b-0'
+                                  )}
+                                >
+                                  <div className="flex items-start justify-between gap-3">
+                                    <p className="text-sm font-black text-slate-950">{item.title || 'Thông báo'}</p>
+                                    {item.createdAt && (
+                                      <span className="shrink-0 text-xs text-slate-400">
+                                        {new Date(item.createdAt).toLocaleString('vi-VN')}
+                                      </span>
+                                    )}
+                                  </div>
+                                  {item.message && <p className="mt-1 line-clamp-2 text-sm text-slate-600">{item.message}</p>}
+                                  {item.orderId && <p className="mt-2 text-xs font-bold text-orange-600">Mã đơn: {item.orderId}</p>}
+                                </Link>
+                              )}
+                            </Menu.Item>
+                          ))
+                        )}
+                      </div>
+                    </Menu.Items>
+                  </Transition>
+                </Menu>
                 <button
                   type="button"
                   onClick={signOut}

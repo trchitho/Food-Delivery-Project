@@ -22,11 +22,13 @@ function Navbar() {
   const currentUser = getCurrentUser()
   const accountName = currentUser?.displayName || currentUser?.username || 'Tài khoản'
   const accountInitial = accountName.charAt(0).toUpperCase()
-  const [unreadNotifications, setUnreadNotifications] = useState(0)
+  const [notifications, setNotifications] = useState([])
+  const unreadNotifications = notifications.filter((item) => !item.read).length
+  const recentNotifications = notifications.slice(0, 4)
 
   useEffect(() => {
     const syncNotifications = () => {
-      setUnreadNotifications(getNotifications().filter((item) => !item.read).length)
+      setNotifications(getNotifications())
     }
     syncNotifications()
     const timer = setInterval(syncNotifications, 1200)
@@ -80,14 +82,78 @@ function Navbar() {
 
               {/* Right side */}
               <div className="flex items-center gap-2">
-                <Link to="/notifications" className="relative rounded-full bg-gray-800 p-2 text-gray-400 hover:text-white hover:bg-gray-700 transition-colors">
-                  <BellIcon className="h-5 w-5" />
-                  {unreadNotifications > 0 && (
-                    <span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-red-500 px-1 text-[11px] font-bold text-white">
-                      {unreadNotifications > 9 ? '9+' : unreadNotifications}
-                    </span>
-                  )}
-                </Link>
+                <Menu as="div" className="relative">
+                  <Menu.Button className="relative rounded-full bg-gray-800 p-2 text-gray-400 transition-colors hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2 focus:ring-offset-gray-900">
+                    <BellIcon className="h-5 w-5" />
+                    {unreadNotifications > 0 && (
+                      <span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-red-500 px-1 text-[11px] font-bold text-white">
+                        {unreadNotifications > 9 ? '9+' : unreadNotifications}
+                      </span>
+                    )}
+                  </Menu.Button>
+                  <Transition
+                    as={Fragment}
+                    enter="transition ease-out duration-100"
+                    enterFrom="transform opacity-0 scale-95"
+                    enterTo="transform opacity-100 scale-100"
+                    leave="transition ease-in duration-75"
+                    leaveFrom="transform opacity-100 scale-100"
+                    leaveTo="transform opacity-0 scale-95"
+                  >
+                    <Menu.Items className="absolute right-0 z-30 mt-3 w-80 origin-top-right overflow-hidden rounded-2xl bg-white shadow-xl ring-1 ring-black/5 focus:outline-none sm:w-96">
+                      <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3">
+                        <p className="text-sm font-black text-gray-950">Thông báo</p>
+                        <Menu.Item>
+                          {({ active }) => (
+                            <Link
+                              to="/notifications"
+                              className={classNames(active ? 'bg-orange-50 text-orange-700' : 'text-orange-600', 'rounded-lg px-2 py-1 text-xs font-bold')}
+                            >
+                              Xem tất cả
+                            </Link>
+                          )}
+                        </Menu.Item>
+                      </div>
+                      <div className="max-h-96 overflow-y-auto">
+                        {!isLoggedIn ? (
+                          <div className="px-4 py-5 text-sm text-gray-500">
+                            Đăng nhập để xem thông báo của bạn.
+                          </div>
+                        ) : recentNotifications.length === 0 ? (
+                          <div className="px-4 py-5 text-sm text-gray-500">
+                            Chưa có thông báo mới.
+                          </div>
+                        ) : (
+                          recentNotifications.map((item) => (
+                            <Menu.Item key={item.id}>
+                              {({ active }) => (
+                                <Link
+                                  to="/notifications"
+                                  className={classNames(
+                                    active ? 'bg-gray-50' : '',
+                                    !item.read ? 'bg-orange-50/70' : 'bg-white',
+                                    'block border-b border-gray-100 px-4 py-3 last:border-b-0'
+                                  )}
+                                >
+                                  <div className="flex items-start justify-between gap-3">
+                                    <p className="text-sm font-black text-gray-950">{item.title || 'Thông báo'}</p>
+                                    {item.createdAt && (
+                                      <span className="shrink-0 text-xs text-gray-400">
+                                        {new Date(item.createdAt).toLocaleString('vi-VN')}
+                                      </span>
+                                    )}
+                                  </div>
+                                  {item.message && <p className="mt-1 line-clamp-2 text-sm text-gray-600">{item.message}</p>}
+                                  {item.orderId && <p className="mt-2 text-xs font-bold text-orange-600">Mã đơn: {item.orderId}</p>}
+                                </Link>
+                              )}
+                            </Menu.Item>
+                          ))
+                        )}
+                      </div>
+                    </Menu.Items>
+                  </Transition>
+                </Menu>
 
                 {isLoggedIn ? (
                   <Menu as="div" className="relative">
