@@ -1,5 +1,6 @@
 import './App.css';
 import { Navigate, Route, Routes, BrowserRouter } from 'react-router-dom';
+import { Analytics } from '@vercel/analytics/react';
 import Homepage from './Feature/Homepage/Homepage'
 import LoginPage from './Feature/Login/LoginPage'
 import RestaurantDetailPage from './Feature/Restaurants/RestaurantDetailPage';
@@ -57,6 +58,7 @@ export default function App() {
         <Route path="/admin/setting" element={<AdminSettingsPage />} ></Route>
         <Route path="/admin/settings" element={<AdminSettingsPage />} ></Route>
       </Routes>
+      <Analytics />
     </BrowserRouter>
   )
 }
