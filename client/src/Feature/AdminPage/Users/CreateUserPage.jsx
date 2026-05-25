@@ -1,6 +1,9 @@
 import axios from 'axios';
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import { TEXT } from '../../../constants/text';
+import { API_BASE, getAuthToken } from '../../../utils/foodData';
+import NavbarAdmin from '../NavbarAdmin';
 
 function CreateUserPage() {
     const [formData, setFormData] = useState({
@@ -24,7 +27,7 @@ function CreateUserPage() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const token = localStorage.getItem("token");
+        const token = getAuthToken();
 
         if (!token) {
             // redirect to login
@@ -32,7 +35,7 @@ function CreateUserPage() {
         }
 
         try {
-            const response = await axios.post('http://localhost:8080/client/signup', formData, {
+            const response = await axios.post(`${API_BASE}/client/signup`, formData, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (response.data.successful) {
@@ -44,14 +47,13 @@ function CreateUserPage() {
         }
     }
 
-    console.log(formData);
-
     return (
-        <div className="max-w-md mx-auto my-8 p-6 bg-white rounded-md shadow-md">
-            <h2 className="text-2xl font-semibold mb-6">Manage Users | Create new User</h2>
+        <NavbarAdmin title="Tạo người dùng" subtitle="Thêm tài khoản mới cho hệ thống quản trị và khách hàng.">
+        <div className="max-w-2xl rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+            <h2 className="text-xl font-black text-slate-950 mb-6">{TEXT.admin_users_title} | {TEXT.admin_create_user}</h2>
             <form onSubmit={handleSubmit}>
                 <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-600">Email:</label>
+                    <label className="block text-sm font-medium text-gray-600">{TEXT.admin_email}:</label>
                     <input
                         className="w-full p-2 border border-gray-300 rounded-md"
                         type="email"
@@ -62,7 +64,7 @@ function CreateUserPage() {
                     />
                 </div>
                 <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-600">Fullname:</label>
+                    <label className="block text-sm font-medium text-gray-600">{TEXT.admin_fullname}:</label>
                     <input
                         className="w-full p-2 border border-gray-300 rounded-md"
                         type="text"
@@ -75,7 +77,7 @@ function CreateUserPage() {
                     />
                 </div>
                 <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-600">Password:</label>
+                    <label className="block text-sm font-medium text-gray-600">{TEXT.admin_password}:</label>
                     <input
                         className="w-full p-2 border border-gray-300 rounded-md"
                         type="password"
@@ -86,7 +88,7 @@ function CreateUserPage() {
                     />
                 </div>
                 <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-600">Roles:</label>
+                    <label className="block text-sm font-medium text-gray-600">{TEXT.admin_roles}:</label>
                     <div className="grid grid-cols-2 gap-4">
                         <div>
                             <label className="flex items-center">
@@ -97,7 +99,7 @@ function CreateUserPage() {
                                     checked={formData.roleId === 1}
                                     onChange={handleInputChange}
                                     className="mr-2" />
-                                Admin
+                                {TEXT.role_admin}
                             </label>
                         </div>
                         <div>
@@ -109,7 +111,7 @@ function CreateUserPage() {
                                     checked={formData.roleId === 2}
                                     onChange={handleInputChange}
                                     className="mr-2" />
-                                User
+                                {TEXT.role_user}
                             </label>
                         </div>
                         <div>
@@ -121,7 +123,7 @@ function CreateUserPage() {
                                     checked={formData.roleId === 3}
                                     onChange={handleInputChange}
                                     className="mr-2" />
-                                Salesperson
+                                {TEXT.role_salesperson}
                             </label>
                         </div>
                         <div>
@@ -133,7 +135,7 @@ function CreateUserPage() {
                                     checked={formData.roleId === 4}
                                     onChange={handleInputChange}
                                     className="mr-2" />
-                                Editor
+                                {TEXT.role_editor}
                             </label>
                         </div>
                         <div>
@@ -145,7 +147,7 @@ function CreateUserPage() {
                                     checked={formData.roleId === 5}
                                     onChange={handleInputChange}
                                     className="mr-2" />
-                                Shipper
+                                {TEXT.role_shipper}
                             </label>
                         </div>
                         <div>
@@ -157,7 +159,7 @@ function CreateUserPage() {
                                     checked={formData.roleId === 6}
                                     onChange={handleInputChange}
                                     className="mr-2" />
-                                Assistant
+                                {TEXT.role_assistant}
                             </label>
                         </div>
                     </div>
@@ -165,17 +167,19 @@ function CreateUserPage() {
                 <div className="flex space-x-4">
                     <input
                         type="submit"
-                        value="Save"
+                        value={TEXT.admin_save}
                         className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 cursor-pointer"
                     />
                     <input
                         type="button"
-                        value="Cancel"
+                        value={TEXT.admin_cancel}
+                        onClick={() => navigate('/admin/users')}
                         className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-400 cursor-pointer"
                     />
                 </div>
             </form>
         </div>
+        </NavbarAdmin>
     )
 }
 

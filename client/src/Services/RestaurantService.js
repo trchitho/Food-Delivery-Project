@@ -1,7 +1,8 @@
 import axios from "axios";
+import { API_BASE, getAuthToken } from "../utils/foodData";
 
-const fetchRestaurantDetail = async () => {
-    const token = localStorage.getItem("token");
+const fetchRestaurantDetail = async (id) => {
+    const token = getAuthToken();
 
     if (!token) {
 
@@ -9,7 +10,7 @@ const fetchRestaurantDetail = async () => {
     }
 
     try {
-        const response = await axios.get(`http://localhost:8080/restaurant/detail?id=${id}`, {
+        const response = await axios.get(`${API_BASE}/restaurant/detail?id=${id}`, {
             headers: { Authorization: `Bearer ${token}` }
         });
         return response;

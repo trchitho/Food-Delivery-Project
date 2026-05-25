@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import axios from 'axios'
-import { useNavigate, Link } from 'react-router-dom'
+import { useLocation, useNavigate, Link } from 'react-router-dom'
 import { TEXT } from '../../constants/text'
+import { API_BASE, setCurrentUser } from '../../utils/foodData'
 
 function Login() {
   const [username, setUsername] = useState('')
@@ -9,16 +10,22 @@ function Login() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
+  const location = useLocation()
 
   const handleSignIn = async (e) => {
     e.preventDefault()
     setError('')
     setLoading(true)
     try {
-      const res = await axios.post('http://localhost:8080/client/login', { username, password })
+      const res = await axios.post(`${API_BASE}/client/login`, { username, password })
       if (res.data.successful) {
-        localStorage.setItem('token', res.data.data)
-        navigate('/', { replace: true })
+        sessionStorage.setItem('token', res.data.data)
+        setCurrentUser({
+          username,
+          displayName: username.includes('@') ? username.split('@')[0] : username,
+          role: username === 'admin' ? 'ADMIN' : 'USER',
+        })
+        navigate(username === 'admin' ? '/admin' : (location.state?.from || '/'), { replace: true })
       } else {
         setError(TEXT.login_error_wrong)
       }
@@ -69,9 +76,9 @@ function Login() {
                 <label className="block text-sm font-semibold text-gray-700">
                   {TEXT.login_password}
                 </label>
-                <a href="#" className="text-xs text-orange-500 hover:text-orange-600 font-medium">
+                <Link to="/forgot-password" className="text-xs text-orange-500 hover:text-orange-600 font-medium">
                   {TEXT.login_forgot}
-                </a>
+                </Link>
               </div>
               <input
                 type="password"
@@ -104,6 +111,11 @@ function Login() {
             {TEXT.login_no_account}{' '}
             <Link to="/signup" className="font-semibold text-orange-500 hover:text-orange-600">
               {TEXT.login_signup}
+            </Link>
+          </p>
+          <p className="text-center text-sm mt-3">
+            <Link to="/" className="font-semibold text-gray-500 hover:text-orange-500">
+              {TEXT.login_back_home}
             </Link>
           </p>
         </div>
