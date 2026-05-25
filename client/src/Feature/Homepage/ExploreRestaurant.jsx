@@ -1,7 +1,8 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { TEXT, RESTAURANT_IMAGES } from '../../constants/text'
+import { Link, useNavigate } from 'react-router-dom'
+import { TEXT } from '../../constants/text'
+import { API_BASE, getFavorites, getRestaurantImage, isLoggedIn, mergeAdminRestaurants, normalizeText, toggleFavorite } from '../../utils/foodData'
 
 const PLACEHOLDER_COLORS = [
   'from-orange-400 to-red-500',
@@ -24,17 +25,17 @@ function SkeletonCard() {
   )
 }
 
-function ExploreRestaurant() {
+function ExploreRestaurant({ searchTerm = '', selectedCategory = 'Tất cả', limit }) {
+  const navigate = useNavigate()
   const [restaurants, setRestaurants] = useState([])
+  const [favorites, setFavorites] = useState([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem('token')
-        const headers = token ? { Authorization: `Bearer ${token}` } : {}
-        const res = await axios.get('http://localhost:8080/restaurant', { headers })
-        setRestaurants(res.data.data || [])
+        const res = await axios.get(`${API_BASE}/restaurant`)
+        setRestaurants(mergeAdminRestaurants(res.data.data || []))
       } catch (e) {
         console.error(e)
       } finally {
@@ -42,45 +43,36 @@ function ExploreRestaurant() {
       }
     }
     fetchData()
+    setFavorites(getFavorites())
   }, [])
 
-  const getImage = (restaurant, index) => {
-    // 1. Try online image map by title
-    if (RESTAURANT_IMAGES[restaurant.title]) return RESTAURANT_IMAGES[restaurant.title]
-    // 2. Try server-uploaded image
-    if (restaurant.image) return `http://localhost:8080/restaurant/file/${restaurant.image}`
-    // 3. Fallback: Unsplash food photo by index
-    const fallbacks = [
-      'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&q=80',
-      'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&q=80',
-      'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&q=80',
-      'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&q=80',
-      'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=80',
-      'https://images.unsplash.com/photo-1547592180-85f173990554?w=400&q=80',
-      'https://images.unsplash.com/photo-1617196034183-421b4040ed20?w=400&q=80',
-      'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=400&q=80',
-    ]
-    return fallbacks[index % fallbacks.length]
-  }
+  const keyword = normalizeText(searchTerm)
+  const filteredRestaurants = restaurants.filter((restaurant) => {
+    const matchesSearch = !keyword || normalizeText(`${restaurant.title} ${restaurant.subtitle} ${restaurant.description} ${restaurant.address}`).includes(keyword)
+    const isChaoInBunPho = selectedCategory === 'Bún - Phở' && normalizeText(`${restaurant.title} ${restaurant.subtitle}`).includes('chao')
+    const matchesCategory = selectedCategory === 'Tất cả' || ((restaurant.categoryNames || []).some((name) => name === selectedCategory) && !isChaoInBunPho)
+    return matchesSearch && matchesCategory
+  })
+  const visibleRestaurants = typeof limit === 'number' ? filteredRestaurants.slice(0, limit) : filteredRestaurants
 
   return (
-    <div className="bg-white">
+    <div id="restaurants" className="bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="text-2xl font-bold text-gray-900">{TEXT.restaurant_title}</h2>
             <p className="text-sm text-gray-500 mt-1">{TEXT.restaurant_subtitle}</p>
           </div>
-          <button className="text-sm font-semibold text-orange-500 hover:text-orange-600 transition-colors">
+          <Link to="/explore" className="text-sm font-semibold text-orange-500 hover:text-orange-600 transition-colors">
             {TEXT.restaurant_view_all}
-          </button>
+          </Link>
         </div>
 
         {loading ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
             {[...Array(8)].map((_, i) => <SkeletonCard key={i} />)}
           </div>
-        ) : restaurants.length === 0 ? (
+        ) : visibleRestaurants.length === 0 ? (
           <div className="text-center py-16 text-gray-400">
             <div className="text-5xl mb-4">🍽️</div>
             <p className="text-lg font-medium">{TEXT.restaurant_empty}</p>
@@ -88,7 +80,9 @@ function ExploreRestaurant() {
           </div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
-            {restaurants.map((r, i) => (
+            {visibleRestaurants.map((r, i) => {
+              const colorIndex = (Number(r.id) || i) % PLACEHOLDER_COLORS.length
+              return (
               <Link
                 key={r.id}
                 to={`/restaurant/detail/${r.id}`}
@@ -96,7 +90,7 @@ function ExploreRestaurant() {
               >
                 <div className="relative h-44 overflow-hidden bg-gray-100">
                   <img
-                    src={getImage(r, i)}
+                    src={getRestaurantImage(r)}
                     alt={r.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     onError={(e) => {
@@ -105,7 +99,7 @@ function ExploreRestaurant() {
                     }}
                   />
                   <div
-                    className={`w-full h-full bg-gradient-to-br ${PLACEHOLDER_COLORS[i % PLACEHOLDER_COLORS.length]} items-center justify-center text-5xl hidden absolute inset-0`}
+                    className={`w-full h-full bg-gradient-to-br ${PLACEHOLDER_COLORS[colorIndex]} items-center justify-center text-5xl hidden absolute inset-0`}
                   >
                     🍜
                   </div>
@@ -114,6 +108,21 @@ function ExploreRestaurant() {
                       {TEXT.free_ship}
                     </span>
                   )}
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      if (!isLoggedIn()) {
+                        navigate('/login', { state: { from: '/favorites' } })
+                        return
+                      }
+                      setFavorites(toggleFavorite(r) || [])
+                    }}
+                    className="absolute top-2 right-2 w-8 h-8 rounded-full bg-white/90 text-orange-500 shadow flex items-center justify-center hover:bg-orange-500 hover:text-white transition-colors"
+                    aria-label="Yêu thích"
+                  >
+                    {favorites.some((item) => item.id === r.id) ? '♥' : '♡'}
+                  </button>
                 </div>
                 <div className="p-3">
                   <h3 className="font-semibold text-gray-900 text-sm leading-tight line-clamp-1 group-hover:text-orange-500 transition-colors">
@@ -124,11 +133,11 @@ function ExploreRestaurant() {
                   )}
                   <div className="flex items-center gap-1 mt-2">
                     <span className="text-yellow-400 text-xs">★★★★☆</span>
-                    <span className="text-xs text-gray-400">(4.0)</span>
+                    <span className="text-xs text-gray-400">({(r.rating || 0).toFixed(1)})</span>
                   </div>
                 </div>
               </Link>
-            ))}
+            )})}
           </div>
         )}
       </div>

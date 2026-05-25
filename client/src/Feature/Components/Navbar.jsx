@@ -1,15 +1,15 @@
-import { Fragment } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { useNavigate, Link } from 'react-router-dom'
 import logo from '../../images/logo.png'
 import { TEXT } from '../../constants/text'
+import { clearCurrentUser, getCurrentUser, getNotifications, isLoggedIn as hasSession } from '../../utils/foodData'
 
 const NAV_ITEMS = [
-  { key: 'nav_explore', href: '/' },
-  { key: 'nav_favourites', href: '#' },
-  { key: 'nav_orders', href: '#' },
-  { key: 'nav_messages', href: '#' },
+  { key: 'nav_favourites', href: '/favorites' },
+  { key: 'nav_orders', href: '/orders' },
+  { key: 'nav_messages', href: '/messages' },
 ]
 
 function classNames(...classes) {
@@ -18,10 +18,29 @@ function classNames(...classes) {
 
 function Navbar() {
   const navigate = useNavigate()
-  const isLoggedIn = !!localStorage.getItem('token')
+  const isLoggedIn = hasSession()
+  const currentUser = getCurrentUser()
+  const accountName = currentUser?.displayName || currentUser?.username || 'Tài khoản'
+  const accountInitial = accountName.charAt(0).toUpperCase()
+  const [unreadNotifications, setUnreadNotifications] = useState(0)
+
+  useEffect(() => {
+    const syncNotifications = () => {
+      setUnreadNotifications(getNotifications().filter((item) => !item.read).length)
+    }
+    syncNotifications()
+    const timer = setInterval(syncNotifications, 1200)
+    window.addEventListener('storage', syncNotifications)
+    window.addEventListener('foodhub-storage-sync', syncNotifications)
+    return () => {
+      clearInterval(timer)
+      window.removeEventListener('storage', syncNotifications)
+      window.removeEventListener('foodhub-storage-sync', syncNotifications)
+    }
+  }, [])
 
   const handleSignOut = () => {
-    localStorage.removeItem('token')
+    clearCurrentUser()
     navigate('/login')
   }
 
@@ -61,18 +80,20 @@ function Navbar() {
 
               {/* Right side */}
               <div className="flex items-center gap-2">
-                <button className="rounded-full bg-gray-800 p-2 text-gray-400 hover:text-white hover:bg-gray-700 transition-colors">
+                <Link to="/notifications" className="relative rounded-full bg-gray-800 p-2 text-gray-400 hover:text-white hover:bg-gray-700 transition-colors">
                   <BellIcon className="h-5 w-5" />
-                </button>
+                  {unreadNotifications > 0 && (
+                    <span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-red-500 px-1 text-[11px] font-bold text-white">
+                      {unreadNotifications > 9 ? '9+' : unreadNotifications}
+                    </span>
+                  )}
+                </Link>
 
                 {isLoggedIn ? (
                   <Menu as="div" className="relative">
-                    <Menu.Button className="flex rounded-full focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2 focus:ring-offset-gray-900">
-                      <img
-                        className="h-8 w-8 rounded-full object-cover"
-                        src="https://ui-avatars.com/api/?name=User&background=f97316&color=fff&size=64"
-                        alt="avatar"
-                      />
+                    <Menu.Button className="flex items-center gap-2 rounded-full bg-orange-500 px-3 py-2 text-sm font-semibold text-white focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2 focus:ring-offset-gray-900">
+                      <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-white/20">{accountInitial}</span>
+                      <span className="hidden sm:inline">{accountName}</span>
                     </Menu.Button>
                     <Transition
                       as={Fragment}
@@ -86,16 +107,16 @@ function Navbar() {
                       <Menu.Items className="absolute right-0 z-20 mt-2 w-48 origin-top-right rounded-xl bg-white py-1 shadow-xl ring-1 ring-black ring-opacity-5 focus:outline-none">
                         <Menu.Item>
                           {({ active }) => (
-                            <a href="#" className={classNames(active ? 'bg-gray-50' : '', 'flex items-center gap-2 px-4 py-2 text-sm text-gray-700')}>
+                            <Link to="/profile" className={classNames(active ? 'bg-gray-50' : '', 'flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700')}>
                               {TEXT.nav_profile}
-                            </a>
+                            </Link>
                           )}
                         </Menu.Item>
                         <Menu.Item>
                           {({ active }) => (
-                            <a href="#" className={classNames(active ? 'bg-gray-50' : '', 'flex items-center gap-2 px-4 py-2 text-sm text-gray-700')}>
+                            <Link to="/settings" className={classNames(active ? 'bg-gray-50' : '', 'flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700')}>
                               {TEXT.nav_settings}
-                            </a>
+                            </Link>
                           )}
                         </Menu.Item>
                         <div className="border-t border-gray-100 my-1" />

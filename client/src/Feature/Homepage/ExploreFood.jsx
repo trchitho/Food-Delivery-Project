@@ -1,64 +1,8 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import { TEXT, CATEGORY_EMOJIS, FOOD_IMAGES } from '../../constants/text'
-
-// Fallback food images by category
-const CATEGORY_FALLBACKS = {
-  '\u0043\u01a1\u006d': [
-    'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=200&q=80',
-    'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=200&q=80',
-    'https://images.unsplash.com/photo-1516684732162-798a0062be99?w=200&q=80',
-  ],
-  '\u0042\u00fa\u006e\u0020\u002d\u0020\u0050\u0068\u1edf': [
-    'https://images.unsplash.com/photo-1555126634-323283e090fa?w=200&q=80',
-    'https://images.unsplash.com/photo-1569050467447-ce54b3bbc37d?w=200&q=80',
-    'https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?w=200&q=80',
-  ],
-  '\u0042\u00e1\u006e\u0068\u0020\u006d\u00ec': [
-    'https://images.unsplash.com/photo-1509722747041-616f39b57569?w=200&q=80',
-    'https://images.unsplash.com/photo-1619740455993-9d622f9e7e5e?w=200&q=80',
-    'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=200&q=80',
-  ],
-  '\u0110\u1ed3\u0020\u0075\u1ed1\u006e\u0067': [
-    'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200&q=80',
-    'https://images.unsplash.com/photo-1515823064-d6e0c04616a7?w=200&q=80',
-    'https://images.unsplash.com/photo-1544145945-f90425340c7e?w=200&q=80',
-  ],
-  '\u0047\u00e0\u0020\u0072\u00e1\u006e': [
-    'https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?w=200&q=80',
-    'https://images.unsplash.com/photo-1562967914-608f82629710?w=200&q=80',
-    'https://images.unsplash.com/photo-1598514983318-2f64f8f4796c?w=200&q=80',
-  ],
-  '\u0050\u0069\u007a\u007a\u0061': [
-    'https://images.unsplash.com/photo-1628840042765-356cda07504e?w=200&q=80',
-    'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=200&q=80',
-    'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=200&q=80',
-  ],
-  '\u004c\u1ea9\u0075': [
-    'https://images.unsplash.com/photo-1547592180-85f173990554?w=200&q=80',
-    'https://images.unsplash.com/photo-1617196034183-421b4040ed20?w=200&q=80',
-    'https://images.unsplash.com/photo-1615361200141-f45040f367be?w=200&q=80',
-  ],
-  '\u0043\u0068\u0061\u0079': [
-    'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=200&q=80',
-    'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=200&q=80',
-    'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=200&q=80',
-  ],
-}
-
-const DEFAULT_FOOD_IMGS = [
-  'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=200&q=80',
-  'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=200&q=80',
-  'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=200&q=80',
-]
-
-function getFoodImage(item, categoryName, index) {
-  if (FOOD_IMAGES[item.title]) return FOOD_IMAGES[item.title]
-  if (item.image) return `http://localhost:8080/menu/file/${item.image}`
-  const catFallbacks = CATEGORY_FALLBACKS[categoryName]
-  if (catFallbacks) return catFallbacks[index % catFallbacks.length]
-  return DEFAULT_FOOD_IMGS[index % DEFAULT_FOOD_IMGS.length]
-}
+import { Link, useNavigate } from 'react-router-dom'
+import { TEXT, CATEGORY_EMOJIS } from '../../constants/text'
+import { API_BASE, addOrder, getFoodImage, isLoggedIn, mergeCatalogCategories, normalizeText } from '../../utils/foodData'
 
 function SkeletonCategory() {
   return (
@@ -77,17 +21,18 @@ function SkeletonCategory() {
   )
 }
 
-function ExploreFood() {
+function ExploreFood({ searchTerm = '', selectedCategory = 'Tất cả', expanded = false }) {
+  const navigate = useNavigate()
   const [categories, setCategories] = useState([])
+  const [expandedCategories, setExpandedCategories] = useState({})
+  const [selectedFood, setSelectedFood] = useState(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const token = localStorage.getItem('token')
-        const headers = token ? { Authorization: `Bearer ${token}` } : {}
-        const res = await axios.get('http://localhost:8080/category', { headers })
-        setCategories(res.data.data || [])
+        const res = await axios.get(`${API_BASE}/category`)
+        setCategories(mergeCatalogCategories(res.data.data || []))
       } catch (e) {
         console.error(e)
       } finally {
@@ -96,6 +41,40 @@ function ExploreFood() {
     }
     fetchData()
   }, [])
+
+  useEffect(() => {
+    const syncAdminFoods = () => {
+      setCategories(mergeCatalogCategories())
+    }
+    const timer = setInterval(syncAdminFoods, 1200)
+    window.addEventListener('storage', syncAdminFoods)
+    window.addEventListener('foodhub-storage-sync', syncAdminFoods)
+    return () => {
+      clearInterval(timer)
+      window.removeEventListener('storage', syncAdminFoods)
+      window.removeEventListener('foodhub-storage-sync', syncAdminFoods)
+    }
+  }, [])
+
+  const keyword = normalizeText(searchTerm)
+  const filteredCategories = categories
+    .filter((cat) => selectedCategory === 'Tất cả' || cat.name === selectedCategory)
+    .map((cat) => ({
+      ...cat,
+      menus: (cat.menus || []).filter((item) => {
+        return !keyword || normalizeText(`${item.title} ${item.description} ${cat.name}`).includes(keyword)
+      }),
+    }))
+    .filter((cat) => cat.menus.length > 0 || !keyword)
+
+  const handleAddToCart = (item, category) => {
+    if (!isLoggedIn()) {
+      navigate('/login', { state: { from: '/orders' } })
+      return
+    }
+    addOrder(item, { id: item.restaurantId, title: item.restaurantTitle || category.name })
+    navigate('/orders')
+  }
 
   return (
     <div className="bg-gray-50">
@@ -111,14 +90,14 @@ function ExploreFood() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[...Array(4)].map((_, i) => <SkeletonCategory key={i} />)}
           </div>
-        ) : categories.length === 0 ? (
+        ) : filteredCategories.length === 0 ? (
           <div className="text-center py-16 text-gray-400">
             <div className="text-5xl mb-4">🍽️</div>
             <p className="text-lg font-medium">{TEXT.food_empty}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {categories.map((cat) => {
+            {filteredCategories.map((cat) => {
               const emoji = CATEGORY_EMOJIS[cat.name] || '🍽️'
               return (
                 <div key={cat.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
@@ -130,18 +109,19 @@ function ExploreFood() {
 
                   {/* Food items */}
                   <div className="px-3 py-2 space-y-1">
-                    {(cat.menus || []).slice(0, 3).map((item, idx) => (
+                    {(cat.menus || []).slice(0, expanded || expandedCategories[cat.id] ? 8 : 3).map((item, idx) => (
                       <div
                         key={item.id}
+                        onClick={() => navigate(`/food/detail/${item.id}`)}
                         className="flex items-center gap-3 p-2 rounded-xl hover:bg-orange-50 cursor-pointer transition-colors group"
                       >
                         <div className="w-14 h-14 rounded-xl overflow-hidden flex-shrink-0 bg-gray-100">
                           <img
-                            src={getFoodImage(item, cat.name, idx)}
+                            src={getFoodImage(item)}
                             alt={item.title}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
                             onError={(e) => {
-                              e.target.src = DEFAULT_FOOD_IMGS[idx % DEFAULT_FOOD_IMGS.length]
+                              e.currentTarget.style.display = 'none'
                             }}
                           />
                         </div>
@@ -161,8 +141,11 @@ function ExploreFood() {
 
                   {/* View more */}
                   <div className="px-4 pb-3 pt-1">
-                    <button className="w-full text-center text-xs font-semibold text-orange-500 hover:text-orange-600 py-1.5 border border-orange-100 rounded-xl hover:bg-orange-50 transition-colors">
-                      {TEXT.food_view_more}
+                    <button
+                      onClick={() => setExpandedCategories((current) => ({ ...current, [cat.id]: !current[cat.id] }))}
+                      className="w-full text-center text-xs font-semibold text-orange-500 hover:text-orange-600 py-1.5 border border-orange-100 rounded-xl hover:bg-orange-50 transition-colors"
+                    >
+                      {expandedCategories[cat.id] ? 'Thu gọn' : TEXT.food_view_more}
                     </button>
                   </div>
                 </div>
@@ -171,6 +154,36 @@ function ExploreFood() {
           </div>
         )}
       </div>
+      {selectedFood && (
+        <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center px-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden">
+            <img src={getFoodImage(selectedFood, selectedFood.id)} alt={selectedFood.title} className="w-full h-56 object-cover bg-gray-100" />
+            <div className="p-5">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <h3 className="text-2xl font-extrabold text-gray-900">{selectedFood.title}</h3>
+                  <p className="text-sm text-gray-500 mt-1">{selectedFood.restaurantTitle || selectedFood.categoryName}</p>
+                </div>
+                <button onClick={() => setSelectedFood(null)} className="rounded-full bg-gray-100 h-9 w-9 text-gray-500 hover:bg-gray-200">×</button>
+              </div>
+              <p className="text-gray-600 mt-4">{selectedFood.description || 'Món ăn đang sẵn sàng phục vụ.'}</p>
+              <div className="flex gap-3 mt-6">
+                {selectedFood.restaurantId && (
+                  <Link to={`/restaurant/detail/${selectedFood.restaurantId}`} className="flex-1 text-center rounded-xl bg-gray-100 px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-200">
+                    Xem nhà hàng
+                  </Link>
+                )}
+                <button
+                  onClick={() => handleAddToCart(selectedFood, { name: selectedFood.categoryName })}
+                  className="flex-1 rounded-xl bg-orange-500 px-4 py-3 text-sm font-semibold text-white hover:bg-orange-600"
+                >
+                  Thêm vào giỏ
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

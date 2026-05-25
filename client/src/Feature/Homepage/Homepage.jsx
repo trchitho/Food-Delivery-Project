@@ -1,10 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
 import ExploreRestaurant from './ExploreRestaurant'
 import ExploreFood from './ExploreFood'
 import Navbar from '../Components/Navbar'
 import { TEXT, CATEGORY_PILLS } from '../../constants/text'
 
 function Homepage() {
+  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState('Tất cả')
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
@@ -20,10 +23,15 @@ function Homepage() {
             <div className="flex gap-2 bg-white rounded-2xl p-1.5 shadow-lg max-w-md">
               <input
                 type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder={TEXT.hero_search_placeholder}
                 className="flex-1 px-4 py-2 text-gray-800 text-sm rounded-xl outline-none placeholder-gray-400"
               />
-              <button className="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2 rounded-xl text-sm font-semibold transition-colors">
+              <button
+                onClick={() => document.getElementById('restaurants')?.scrollIntoView({ behavior: 'smooth' })}
+                className="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2 rounded-xl text-sm font-semibold transition-colors"
+              >
                 {TEXT.hero_search_btn}
               </button>
             </div>
@@ -38,8 +46,9 @@ function Homepage() {
             {CATEGORY_PILLS.map((cat, i) => (
               <button
                 key={i}
+                onClick={() => setSelectedCategory(cat.label)}
                 className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
-                  i === 0
+                  selectedCategory === cat.label
                     ? 'bg-orange-500 text-white'
                     : 'bg-gray-100 text-gray-600 hover:bg-orange-50 hover:text-orange-500'
                 }`}
@@ -52,8 +61,8 @@ function Homepage() {
         </div>
       </div>
 
-      <ExploreRestaurant />
-      <ExploreFood />
+      <ExploreRestaurant searchTerm={searchTerm} selectedCategory={selectedCategory} />
+      <ExploreFood searchTerm={searchTerm} selectedCategory={selectedCategory} />
 
       <footer className="bg-gray-800 text-gray-400 text-center py-6 text-sm mt-8">
         {TEXT.footer}
