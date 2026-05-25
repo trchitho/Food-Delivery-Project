@@ -337,5 +337,33 @@ Spring Boot (port 8080)
 
 ## Author
 
-**Max Nguyen** — Backend & Full-stack Developer  
+**Tho Tran** — Backend & Full-stack Developer  
 Built as an internship project to demonstrate Spring Boot, REST API design, and React development skills.
+
+---
+
+## Deployment Notes
+
+### Frontend on Vercel
+
+The repository includes `vercel.json` for deploying the React app from the `client` folder.
+
+Required Vercel environment variable:
+
+```env
+REACT_APP_API_BASE=https://your-public-backend-url
+```
+
+### Backend and Database
+
+The Spring Boot API should run on a Java-capable host such as Render, Railway, Fly.io, or a VPS. The project includes a root `Dockerfile` for container deployment.
+
+Required backend environment variables:
+
+```env
+DATABASE_URL=jdbc:mysql://your-mysql-host:3306/fooddelivery?useUnicode=true&characterEncoding=utf8&characterSetResults=utf8mb4&connectionCollation=utf8mb4_0900_ai_ci
+DATABASE_USERNAME=your_database_user
+DATABASE_PASSWORD=your_database_password
+JWT_PRIVATE_KEY=replace-with-base64-secret
+CORS_ALLOWED_ORIGINS=https://your-vercel-app.vercel.app,http://localhost:3000
+```
