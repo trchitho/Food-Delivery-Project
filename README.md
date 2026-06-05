@@ -80,7 +80,7 @@ A full-stack online food delivery platform built with **Spring Boot** (backend) 
 
 ```
 Food-Delivery-Project/
-├── src/main/java/com/maxnguyen/fooddelivery/
+├── src/main/java/com/thotran/fooddelivery/
 │   ├── config/
 │   │   └── RedisConfig.java              # Redis connection configuration
 │   ├── controller/
