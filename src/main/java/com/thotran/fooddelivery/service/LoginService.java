@@ -6,11 +6,13 @@ import com.thotran.fooddelivery.entity.Users;
 import com.thotran.fooddelivery.service.imp.LoginServiceImp;
 import com.thotran.fooddelivery.payload.request.SignUpRequest;
 import com.thotran.fooddelivery.repository.UserRepository;
+import com.thotran.fooddelivery.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 @Service
 public class LoginService implements LoginServiceImp {
@@ -19,6 +21,9 @@ public class LoginService implements LoginServiceImp {
 
     @Autowired
     PasswordEncoder passwordEncoder;
+
+    @Autowired
+    RoleRepository roleRepository;
 
     @Override
     public List<UserDto> getAllUser(){
@@ -39,21 +44,29 @@ public class LoginService implements LoginServiceImp {
     }
 
     @Override
-    public boolean checkLogin(String username, String password) {
+    public Users authenticate(String username, String password) {
         Users users = userRepository.findByUserName(username);
-
-        return passwordEncoder.matches(password, users.getPassword());
+        if (users == null || !passwordEncoder.matches(password, users.getPassword())) {
+            return null;
+        }
+        return users;
     }
 
     @Override
     public boolean addUser(SignUpRequest signUpRequest) {
-
-        Roles roles = new Roles();
-        roles.setId(signUpRequest.getRoleId());
+        String username = signUpRequest.getEmail().trim().toLowerCase();
+        if (userRepository.existsByUserName(username)) {
+            return false;
+        }
+        Roles roles = roleRepository.findByRoleName("USER");
+        if (roles == null) {
+            return false;
+        }
 
         Users users = new Users();
-        users.setFullname(signUpRequest.getFullname());
-        users.setUserName(signUpRequest.getEmail());
+        users.setFullname(signUpRequest.getFullname().trim());
+        users.setUserName(username);
+        users.setCreateDate(new Date());
 
         String encodedPassword = passwordEncoder.encode(signUpRequest.getPassword());
 
@@ -63,7 +76,7 @@ public class LoginService implements LoginServiceImp {
         try {
             userRepository.save(users);
             return true;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             return false;
         }
     }

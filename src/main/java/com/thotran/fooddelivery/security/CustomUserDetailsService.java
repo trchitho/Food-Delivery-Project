@@ -7,9 +7,10 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -21,6 +22,10 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (users == null) {
             throw new UsernameNotFoundException("Username does not exist");
         }
-        return new User(username, users.getPassword(), new ArrayList<>());
+        return new User(
+                username,
+                users.getPassword(),
+                List.of(new SimpleGrantedAuthority("ROLE_" + users.getRoles().getRoleName()))
+        );
     }
 }

@@ -19,13 +19,16 @@ function Login() {
     try {
       const res = await axios.post(`${API_BASE}/client/login`, { username, password })
       if (res.data.successful) {
-        sessionStorage.setItem('token', res.data.data)
+        const auth = typeof res.data.data === 'string'
+          ? { token: res.data.data, username, displayName: username, role: username === 'admin' ? 'ADMIN' : 'USER' }
+          : res.data.data
+        sessionStorage.setItem('token', auth.token)
         setCurrentUser({
-          username,
-          displayName: username.includes('@') ? username.split('@')[0] : username,
-          role: username === 'admin' ? 'ADMIN' : 'USER',
+          username: auth.username,
+          displayName: auth.displayName,
+          role: auth.role,
         })
-        navigate(username === 'admin' ? '/admin' : (location.state?.from || '/'), { replace: true })
+        navigate(auth.role === 'ADMIN' ? '/admin' : (location.state?.from || '/'), { replace: true })
       } else {
         setError(TEXT.login_error_wrong)
       }

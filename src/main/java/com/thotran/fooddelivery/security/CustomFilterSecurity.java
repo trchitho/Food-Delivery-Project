@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -48,9 +49,13 @@ public class CustomFilterSecurity {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> {
                     request
-                            .requestMatchers(
-                                    "/client/**", "/restaurant/**", "/restaurant/file/**","/restaurant/detail/**", "/category/**", "/menu/file/**", "/user", "/client/signup"
-                            ).permitAll()
+                            .requestMatchers("/client/login", "/client/signup").permitAll()
+                            .requestMatchers(HttpMethod.GET, "/restaurant/**", "/category/**", "/menu/file/**").permitAll()
+                            .requestMatchers("/user/**").hasRole("ADMIN")
+                            .requestMatchers(HttpMethod.POST, "/restaurant/**", "/menu/**").hasRole("ADMIN")
+                            .requestMatchers(HttpMethod.PUT, "/restaurant/**", "/menu/**").hasRole("ADMIN")
+                            .requestMatchers(HttpMethod.PATCH, "/restaurant/**", "/menu/**").hasRole("ADMIN")
+                            .requestMatchers(HttpMethod.DELETE, "/restaurant/**", "/menu/**").hasRole("ADMIN")
                             .anyRequest().authenticated();
                 });
         http.addFilterBefore(customJwtFilter, UsernamePasswordAuthenticationFilter.class);
