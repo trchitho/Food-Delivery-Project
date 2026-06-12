@@ -1,7 +1,8 @@
 import { FOOD_IMAGES, RESTAURANT_IMAGES } from '../constants/text'
 import { CURATED_CATEGORIES, CURATED_FOOD_IMAGES, CURATED_RESTAURANT_IMAGES, CURATED_RESTAURANTS } from '../data/curatedCatalog'
 
-export const API_BASE = process.env.REACT_APP_API_BASE || 'http://localhost:8080'
+const configuredApiBase = (process.env.REACT_APP_API_BASE || '').trim()
+export const API_BASE = (configuredApiBase || (process.env.NODE_ENV === 'development' ? 'http://localhost:8080' : '')).replace(/\/$/, '')
 
 const RESTAURANT_FALLBACKS = [
   'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=700&q=80',
