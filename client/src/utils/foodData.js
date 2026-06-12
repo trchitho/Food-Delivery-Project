@@ -208,12 +208,18 @@ export function getCatalogRestaurantDetail(value) {
 }
 
 export function mergeCatalogCategories(categories = []) {
-  return mergeAdminFoodsIntoCategories(getCatalogCategories())
+  const source = Array.isArray(categories) && categories.length > 0
+    ? sanitizeCategoryMenus(categories)
+    : getCatalogCategories()
+  return mergeAdminFoodsIntoCategories(source)
 }
 
 export function mergeAdminRestaurants(restaurants = []) {
   const adminRestaurants = getAdminRestaurantsFallback()
-  const map = new Map(getCatalogRestaurants().map((restaurant) => [String(restaurant.id), restaurant]))
+  const source = Array.isArray(restaurants) && restaurants.length > 0
+    ? sortStableItems(restaurants.map((restaurant) => ({ ...restaurant })))
+    : getCatalogRestaurants()
+  const map = new Map(source.map((restaurant) => [String(restaurant.id), restaurant]))
   ;(adminRestaurants || []).forEach((restaurant) => {
     if ((restaurant.status || 'Đang hoạt động') === 'Ẩn') return
     const key = String(restaurant.id)

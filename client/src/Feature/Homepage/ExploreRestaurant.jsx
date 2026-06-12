@@ -38,6 +38,7 @@ function ExploreRestaurant({ searchTerm = '', selectedCategory = 'Tất cả', l
         setRestaurants(mergeAdminRestaurants(res.data.data || []))
       } catch (e) {
         console.error(e)
+        setRestaurants(mergeAdminRestaurants())
       } finally {
         setLoading(false)
       }

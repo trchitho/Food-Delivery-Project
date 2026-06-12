@@ -35,6 +35,7 @@ function ExploreFood({ searchTerm = '', selectedCategory = 'Tất cả', expande
         setCategories(mergeCatalogCategories(res.data.data || []))
       } catch (e) {
         console.error(e)
+        setCategories(mergeCatalogCategories())
       } finally {
         setLoading(false)
       }
@@ -44,7 +45,7 @@ function ExploreFood({ searchTerm = '', selectedCategory = 'Tất cả', expande
 
   useEffect(() => {
     const syncAdminFoods = () => {
-      setCategories(mergeCatalogCategories())
+      setCategories((current) => mergeCatalogCategories(current))
     }
     const timer = setInterval(syncAdminFoods, 1200)
     window.addEventListener('storage', syncAdminFoods)

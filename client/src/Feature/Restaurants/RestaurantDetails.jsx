@@ -13,20 +13,10 @@ function RestaurantDetails() {
   useEffect(() => {
     const fetchRestaurantDetail = async () => {
       try {
-        const catalogDetail = getCatalogRestaurantDetail(id)
-        if (catalogDetail) {
-          setRestaurantDetail(catalogDetail)
-          return
-        }
         const response = await axios.get(`${API_BASE}/restaurant/detail?id=${id}`)
         const apiDetail = response.data.data
-        if (!apiDetail) {
+        if (!apiDetail?.id) {
           setRestaurantDetail(null)
-          return
-        }
-        const catalogByTitle = getCatalogRestaurantDetail(apiDetail.title)
-        if (catalogByTitle) {
-          setRestaurantDetail(catalogByTitle)
           return
         }
         const adminRestaurant = (getAdminRestaurantsFallback() || []).find((item) => String(item.id) === String(id))
@@ -54,21 +44,6 @@ function RestaurantDetails() {
     }
 
     fetchRestaurantDetail()
-  }, [id])
-
-  useEffect(() => {
-    const syncCatalogDetail = () => {
-      const catalogDetail = getCatalogRestaurantDetail(id)
-      if (catalogDetail) setRestaurantDetail(catalogDetail)
-    }
-    const timer = setInterval(syncCatalogDetail, 1200)
-    window.addEventListener('storage', syncCatalogDetail)
-    window.addEventListener('foodhub-storage-sync', syncCatalogDetail)
-    return () => {
-      clearInterval(timer)
-      window.removeEventListener('storage', syncCatalogDetail)
-      window.removeEventListener('foodhub-storage-sync', syncCatalogDetail)
-    }
   }, [id])
 
   const menuCount = useMemo(() => {
