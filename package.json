@@ -1,0 +1,16 @@
+{
+  "name": "foodhub-database-tools",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "db:migrate": "node scripts/database.mjs migrate",
+    "db:seed": "node scripts/database.mjs seed",
+    "db:reset": "node scripts/database.mjs reset",
+    "seed:generate": "node scripts/generate-production-seed.mjs"
+  },
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "mysql2": "^3.14.1"
+  }
+}
