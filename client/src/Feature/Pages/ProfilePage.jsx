@@ -32,9 +32,9 @@ function ProfilePage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
-      <main className="max-w-3xl mx-auto px-4 py-10">
-        <h1 className="text-3xl font-extrabold text-gray-900">{TEXT.page_profile_title}</h1>
-        <form onSubmit={handleSubmit} className="mt-8 bg-white rounded-2xl border border-gray-100 p-6 shadow-sm space-y-4">
+      <main className="mx-auto w-full max-w-3xl px-4 py-8 sm:py-10">
+        <h1 className="text-2xl font-extrabold text-gray-900 sm:text-3xl">{TEXT.page_profile_title}</h1>
+        <form onSubmit={handleSubmit} className="mt-6 space-y-4 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm sm:mt-8 sm:p-6">
           {saved && <div className="rounded-xl bg-green-50 text-green-700 px-4 py-3 text-sm">{TEXT.profile_saved}</div>}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1.5">Họ và tên</label>
@@ -52,9 +52,9 @@ function ProfilePage() {
             <label className="block text-sm font-semibold text-gray-700 mb-1.5">Địa chỉ giao hàng</label>
             <textarea value={profile.address} onChange={(e) => updateField('address', e.target.value)} rows="3" className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:ring-2 focus:ring-orange-400" />
           </div>
-          <div className="flex gap-3">
-            <button className="rounded-xl bg-orange-500 px-5 py-3 text-sm font-semibold text-white hover:bg-orange-600">Lưu hồ sơ</button>
-            <Link to="/" className="rounded-xl bg-gray-100 px-5 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-200">Về trang chủ</Link>
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <button className="min-h-11 rounded-xl bg-orange-500 px-5 py-3 text-sm font-semibold text-white hover:bg-orange-600">Lưu hồ sơ</button>
+            <Link to="/" className="inline-flex min-h-11 items-center justify-center rounded-xl bg-gray-100 px-5 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-200">Về trang chủ</Link>
           </div>
         </form>
       </main>
