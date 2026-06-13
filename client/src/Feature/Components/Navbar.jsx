@@ -5,6 +5,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import logo from '../../images/logo.png'
 import { TEXT } from '../../constants/text'
 import { clearCurrentUser, getCurrentUser, getNotifications, isLoggedIn as hasSession } from '../../utils/foodData'
+import ThemeToggle from './ThemeToggle'
 
 const NAV_ITEMS = [
   { key: 'nav_favourites', href: '/favorites' },
@@ -82,6 +83,7 @@ function Navbar() {
 
               {/* Right side */}
               <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+                <ThemeToggle className="border-gray-700 bg-gray-800 text-gray-200 hover:bg-gray-700" />
                 <Menu as="div" className="relative">
                   <Menu.Button aria-label="Mở thông báo" className="relative grid h-11 w-11 place-items-center rounded-full bg-gray-800 text-gray-300 transition-colors hover:bg-gray-700 hover:text-white focus-visible:ring-2 focus-visible:ring-orange-400">
                     <BellIcon className="h-5 w-5" />
@@ -100,8 +102,8 @@ function Navbar() {
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95"
                   >
-                    <Menu.Items className="fixed inset-x-3 top-16 z-30 max-h-[calc(100dvh-5rem)] origin-top-right overflow-y-auto rounded-2xl bg-white shadow-xl ring-1 ring-black/5 focus:outline-none sm:absolute sm:inset-x-auto sm:right-0 sm:top-auto sm:mt-3 sm:w-96">
-                      <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3">
+                    <Menu.Items className="fixed inset-x-3 top-16 z-30 max-h-[calc(100dvh-5rem)] origin-top-right overflow-y-auto rounded-2xl bg-white shadow-xl ring-1 ring-black/5 focus:outline-none dark:bg-slate-900 dark:ring-white/10 sm:absolute sm:inset-x-auto sm:right-0 sm:top-auto sm:mt-3 sm:w-96">
+                      <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3 dark:border-slate-700">
                         <p className="text-sm font-black text-gray-950">Thông báo</p>
                         <Menu.Item>
                           {({ active }) => (
@@ -170,7 +172,7 @@ function Navbar() {
                       leaveFrom="transform opacity-100 scale-100"
                       leaveTo="transform opacity-0 scale-95"
                     >
-                      <Menu.Items className="absolute right-0 z-20 mt-2 w-48 max-w-[calc(100vw-1.5rem)] origin-top-right rounded-xl bg-white py-1 shadow-xl ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      <Menu.Items className="absolute right-0 z-20 mt-2 w-48 max-w-[calc(100vw-1.5rem)] origin-top-right rounded-xl bg-white py-1 shadow-xl ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-slate-900 dark:ring-white/10">
                         <Menu.Item>
                           {({ active }) => (
                             <Link to="/profile" className={classNames(active ? 'bg-gray-50' : '', 'flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700')}>
