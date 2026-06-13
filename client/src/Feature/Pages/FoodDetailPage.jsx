@@ -2,6 +2,7 @@ import axios from 'axios'
 import React, { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import Navbar from '../Components/Navbar'
+import FoodReviewSection from '../Components/FoodReviewSection'
 import { API_BASE, addOrder, formatPrice, getFoodImage, isLoggedIn, mergeAdminRestaurants, mergeCatalogCategories } from '../../utils/foodData'
 
 function FoodDetailPage() {
@@ -36,15 +37,15 @@ function FoodDetailPage() {
   }
 
   if (!food) {
-    return <div className="min-h-screen bg-gray-50"><Navbar /><main className="max-w-5xl mx-auto px-4 py-16"><h1 className="text-2xl font-black">Không tìm thấy món ăn</h1><Link to="/" className="mt-4 inline-flex text-orange-500 font-bold">Về trang chủ</Link></main></div>
+    return <div className="min-h-screen bg-gray-50 dark:bg-slate-950"><Navbar /><main className="max-w-5xl mx-auto px-4 py-16"><h1 className="text-2xl font-black">Không tìm thấy món ăn</h1><Link to="/" className="mt-4 inline-flex text-orange-500 font-bold">Về trang chủ</Link></main></div>
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-slate-950">
       <Navbar />
       <main className="mx-auto w-full max-w-6xl px-4 py-6 sm:py-10">
         <Link to={restaurant?.id ? `/restaurant/detail/${restaurant.id}` : '/'} className="text-sm font-bold text-orange-500">← Quay lại</Link>
-        <section className="mt-5 grid min-w-0 grid-cols-1 gap-6 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm sm:rounded-3xl sm:p-5 lg:grid-cols-[1fr_0.9fr] lg:gap-8">
+        <section className="mt-5 grid min-w-0 grid-cols-1 gap-6 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:rounded-3xl sm:p-5 lg:grid-cols-[1fr_0.9fr] lg:gap-8">
           <img src={food.image || getFoodImage(food)} alt={food.title} className="aspect-square w-full rounded-2xl bg-gray-100 object-cover sm:aspect-[4/3] lg:h-[420px] lg:aspect-auto" />
           <div className="flex min-w-0 flex-col">
             <p className="text-sm font-bold text-orange-500">{food.categoryName}</p>
@@ -63,6 +64,7 @@ function FoodDetailPage() {
             <button onClick={orderFood} className="mt-6 min-h-12 rounded-2xl bg-orange-500 px-6 py-3 text-sm font-black text-white hover:bg-orange-600 lg:mt-auto">Đặt món này</button>
           </div>
         </section>
+        <FoodReviewSection foodId={id} />
       </main>
     </div>
   )
