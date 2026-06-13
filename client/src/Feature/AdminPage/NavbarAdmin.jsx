@@ -133,16 +133,16 @@ function NavbarAdmin({ title = 'Bảng điều khiển', subtitle = '', action, 
       <div className={`transition-all duration-200 ${collapsed ? 'lg:pl-20' : 'lg:pl-72'}`}>
         <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/95 backdrop-blur">
           <div className="px-4 py-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-              <div>
+            <div className="flex min-w-0 flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+              <div className="min-w-0">
                 <p className="text-xs font-bold uppercase tracking-[0.2em] text-orange-500 lg:hidden">FoodHub Admin</p>
-                <h2 className="text-2xl font-black text-slate-950">{title}</h2>
+                <h2 className="break-words text-xl font-black text-slate-950 sm:text-2xl">{title}</h2>
                 {subtitle && <p className="mt-1 text-sm text-slate-500">{subtitle}</p>}
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex min-w-0 flex-wrap items-center gap-2 sm:gap-3">
                 {action}
-                <Menu as="div" className="relative hidden sm:block">
-                  <Menu.Button title="Thông báo" className="relative grid h-10 w-10 place-items-center rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-orange-300">
+                <Menu as="div" className="relative">
+                  <Menu.Button aria-label="Mở thông báo quản trị" title="Thông báo" className="relative grid h-11 w-11 place-items-center rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-orange-300">
                     <BellIcon className="h-5 w-5" />
                     {adminAlerts > 0 && <span className="absolute -right-2 -top-2 grid h-5 min-w-5 place-items-center rounded-full bg-red-500 px-1 text-[11px] font-bold text-white">{adminAlerts > 9 ? '9+' : adminAlerts}</span>}
                   </Menu.Button>
@@ -155,7 +155,7 @@ function NavbarAdmin({ title = 'Bảng điều khiển', subtitle = '', action, 
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95"
                   >
-                    <Menu.Items className="absolute right-0 z-40 mt-3 w-96 origin-top-right overflow-hidden rounded-2xl bg-white shadow-xl ring-1 ring-black/5 focus:outline-none">
+                    <Menu.Items className="fixed inset-x-3 top-20 z-40 max-h-[calc(100dvh-6rem)] origin-top-right overflow-y-auto rounded-2xl bg-white shadow-xl ring-1 ring-black/5 focus:outline-none sm:absolute sm:inset-x-auto sm:right-0 sm:top-auto sm:mt-3 sm:w-96">
                       <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3">
                         <p className="text-sm font-black text-slate-950">Thông báo quản trị</p>
                         <Menu.Item>
