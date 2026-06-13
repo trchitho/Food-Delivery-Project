@@ -131,7 +131,7 @@ function RestaurantDetails() {
         </div>
       </section>
 
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <section className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
         <h2 className="text-2xl font-bold text-gray-900 mb-6">{TEXT.detail_menu}</h2>
         {menuCount === 0 ? (
           <div className="rounded-2xl bg-white border border-gray-100 p-10 text-center text-gray-500">
@@ -148,7 +148,7 @@ function RestaurantDetails() {
                     <span className="text-2xl">{CATEGORY_EMOJIS[category.name] || '🍽️'}</span>
                     <h3 className="text-xl font-bold text-gray-900">{category.name}</h3>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
                     {menus.map((food, index) => (
                       <article key={food.id} className="bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm">
                         <Link to={`/food/detail/${food.id}`}>
@@ -158,14 +158,14 @@ function RestaurantDetails() {
                             className="w-full h-40 object-cover bg-gray-100"
                           />
                         </Link>
-                        <div className="p-4">
-                          <Link to={`/food/detail/${food.id}`} className="font-bold text-gray-900 hover:text-orange-500">{food.title}</Link>
+                        <div className="min-w-0 p-4">
+                          <Link to={`/food/detail/${food.id}`} className="break-words font-bold text-gray-900 hover:text-orange-500">{food.title}</Link>
                           <p className="text-sm text-gray-500 line-clamp-2 mt-1">{food.description}</p>
-                          <div className="flex items-center justify-between mt-4">
-                            <span className="text-orange-600 font-bold">{formatPrice(food.price)}</span>
-                            <div className="flex gap-2">
-                              <Link to={`/food/detail/${food.id}`} className="rounded-lg bg-gray-100 px-3 py-2 text-xs font-semibold text-gray-700 hover:bg-orange-50">Chi tiết</Link>
-                              <button onClick={() => handleOrder(food)} className="rounded-lg bg-gray-900 text-white text-xs font-semibold px-3 py-2 hover:bg-orange-500 transition-colors">{TEXT.detail_order}</button>
+                          <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+                            <span className="font-bold text-orange-600">{formatPrice(food.price)}</span>
+                            <div className="flex flex-wrap gap-2">
+                              <Link to={`/food/detail/${food.id}`} className="inline-flex min-h-10 items-center rounded-lg bg-gray-100 px-3 py-2 text-xs font-semibold text-gray-700 hover:bg-orange-50">Chi tiết</Link>
+                              <button onClick={() => handleOrder(food)} className="min-h-10 rounded-lg bg-gray-900 px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-orange-500">{TEXT.detail_order}</button>
                             </div>
                           </div>
                         </div>
