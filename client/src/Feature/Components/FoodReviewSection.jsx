@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { API_BASE, getAuthToken, isLoggedIn } from '../../utils/foodData'
 import RatingStars from './RatingStars'
@@ -12,9 +12,9 @@ function FoodReviewSection({ foodId }) {
   const [message, setMessage] = useState('')
   const loggedIn = isLoggedIn()
 
-  const loadReviews = () => axios.get(`${API_BASE}/reviews/food/${foodId}`)
+  const loadReviews = useCallback(() => axios.get(`${API_BASE}/reviews/food/${foodId}`)
     .then(({ data }) => setReviews(Array.isArray(data) ? data : []))
-    .catch(() => setReviews([]))
+    .catch(() => setReviews([])), [foodId])
 
   useEffect(() => {
     loadReviews()
@@ -26,7 +26,7 @@ function FoodReviewSection({ foodId }) {
       if (data.review?.rating) setRating(data.review.rating)
       if (data.review?.comment) setComment(data.review.comment)
     }).catch(() => setEligibility({ canReview: false }))
-  }, [foodId, loggedIn])
+  }, [foodId, loggedIn, loadReviews])
 
   const average = useMemo(() => reviews.length
     ? reviews.reduce((sum, item) => sum + Number(item.rating || 0), 0) / reviews.length
