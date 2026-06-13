@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { TEXT } from '../../constants/text'
 import { API_BASE, getFavorites, getRestaurantImage, isLoggedIn, mergeAdminRestaurants, normalizeText, toggleFavorite } from '../../utils/foodData'
+import PaginationControls from '../Components/PaginationControls'
 
 const PLACEHOLDER_COLORS = [
   'from-orange-400 to-red-500',
@@ -25,11 +26,12 @@ function SkeletonCard() {
   )
 }
 
-function ExploreRestaurant({ searchTerm = '', selectedCategory = 'Tất cả', limit }) {
+function ExploreRestaurant({ searchTerm = '', selectedCategory = 'Tất cả', limit, paginateAll = false }) {
   const navigate = useNavigate()
   const [restaurants, setRestaurants] = useState([])
   const [favorites, setFavorites] = useState([])
   const [loading, setLoading] = useState(true)
+  const [page, setPage] = useState(1)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,6 +48,10 @@ function ExploreRestaurant({ searchTerm = '', selectedCategory = 'Tất cả', l
     setFavorites(getFavorites())
   }, [])
 
+  useEffect(() => {
+    setPage(1)
+  }, [searchTerm, selectedCategory])
+
   const keyword = normalizeText(searchTerm)
   const filteredRestaurants = restaurants.filter((restaurant) => {
     const matchesSearch = !keyword || normalizeText(`${restaurant.title} ${restaurant.subtitle} ${restaurant.description} ${restaurant.address}`).includes(keyword)
@@ -53,7 +59,12 @@ function ExploreRestaurant({ searchTerm = '', selectedCategory = 'Tất cả', l
     const matchesCategory = selectedCategory === 'Tất cả' || ((restaurant.categoryNames || []).some((name) => name === selectedCategory) && !isChaoInBunPho)
     return matchesSearch && matchesCategory
   })
-  const visibleRestaurants = typeof limit === 'number' ? filteredRestaurants.slice(0, limit) : filteredRestaurants
+  const shouldPaginate = paginateAll && selectedCategory === 'Tất cả' && typeof limit !== 'number'
+  const totalPages = Math.max(1, Math.ceil(filteredRestaurants.length / 8))
+  const pageStart = (page - 1) * 8
+  const visibleRestaurants = typeof limit === 'number'
+    ? filteredRestaurants.slice(0, limit)
+    : shouldPaginate ? filteredRestaurants.slice(pageStart, pageStart + 8) : filteredRestaurants
 
   return (
     <div id="restaurants" className="bg-white">
