@@ -50,11 +50,11 @@ function Navbar() {
     <Disclosure as="nav" className="bg-gray-900 shadow-lg">
       {({ open }) => (
         <>
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="relative flex h-16 items-center justify-between">
+          <div className="mx-auto w-full max-w-7xl px-3 sm:px-6 lg:px-8">
+            <div className="flex h-16 min-w-0 items-center gap-2">
               {/* Mobile button */}
-              <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
-                <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none">
+              <div className="flex shrink-0 items-center sm:hidden">
+                <Disclosure.Button aria-label={open ? 'Đóng menu' : 'Mở menu'} className="inline-flex h-11 w-11 items-center justify-center rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white focus-visible:ring-2 focus-visible:ring-orange-400">
                   {open
                     ? <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
                     : <Bars3Icon className="block h-6 w-6" aria-hidden="true" />}
@@ -62,10 +62,10 @@ function Navbar() {
               </div>
 
               {/* Logo + Nav links */}
-              <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-                <Link to="/" className="flex flex-shrink-0 items-center gap-2">
+              <div className="flex min-w-0 flex-1 items-center sm:items-stretch">
+                <Link to="/" className="flex min-w-0 flex-shrink items-center gap-2">
                   <img className="h-8 w-auto" src={logo} alt="FoodHub" />
-                  <span className="text-white font-bold text-lg hidden sm:block">FoodHub</span>
+                  <span className="truncate text-base font-bold text-white min-[360px]:inline sm:text-lg">FoodHub</span>
                 </Link>
                 <div className="hidden sm:ml-8 sm:flex sm:items-center sm:space-x-1">
                   {NAV_ITEMS.map((item) => (
@@ -81,9 +81,9 @@ function Navbar() {
               </div>
 
               {/* Right side */}
-              <div className="flex items-center gap-2">
+              <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
                 <Menu as="div" className="relative">
-                  <Menu.Button className="relative rounded-full bg-gray-800 p-2 text-gray-400 transition-colors hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2 focus:ring-offset-gray-900">
+                  <Menu.Button aria-label="Mở thông báo" className="relative grid h-11 w-11 place-items-center rounded-full bg-gray-800 text-gray-300 transition-colors hover:bg-gray-700 hover:text-white focus-visible:ring-2 focus-visible:ring-orange-400">
                     <BellIcon className="h-5 w-5" />
                     {unreadNotifications > 0 && (
                       <span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-red-500 px-1 text-[11px] font-bold text-white">
