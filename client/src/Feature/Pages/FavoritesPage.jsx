@@ -23,10 +23,10 @@ function FavoritesPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <h1 className="text-3xl font-extrabold text-gray-900">{TEXT.page_favorites_title}</h1>
+      <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+        <h1 className="text-2xl font-extrabold text-gray-900 sm:text-3xl">{TEXT.page_favorites_title}</h1>
         {favorites.length === 0 ? (
-          <div className="mt-8 bg-white rounded-2xl border border-gray-100 p-12 text-center">
+          <div className="mt-6 rounded-2xl border border-gray-100 bg-white p-8 text-center sm:mt-8 sm:p-12">
             <div className="text-5xl mb-4">♡</div>
             <p className="text-gray-500">{TEXT.page_favorites_empty}</p>
             <Link to="/" className="inline-block mt-5 text-orange-500 font-semibold">
@@ -34,16 +34,16 @@ function FavoritesPage() {
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mt-8">
+          <div className="mt-6 grid grid-cols-1 gap-4 min-[425px]:grid-cols-2 lg:mt-8 lg:grid-cols-4 lg:gap-5">
             {favorites.map((restaurant) => (
               <article key={restaurant.id} className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
                 <Link to={`/restaurant/detail/${restaurant.id}`}>
                   <img src={getRestaurantImage(restaurant)} alt={restaurant.title} className="h-44 w-full object-cover" />
                 </Link>
                 <div className="p-4">
-                  <h2 className="font-bold text-gray-900">{restaurant.title}</h2>
-                  <p className="text-sm text-gray-500 mt-1">{restaurant.subtitle}</p>
-                  <button onClick={() => removeFavorite(restaurant)} className="mt-4 text-sm font-semibold text-red-500">
+                  <h2 className="break-words font-bold text-gray-900">{restaurant.title}</h2>
+                  <p className="mt-1 line-clamp-2 text-sm text-gray-500">{restaurant.subtitle}</p>
+                  <button onClick={() => removeFavorite(restaurant)} className="mt-3 min-h-11 text-sm font-semibold text-red-500">
                     Bỏ yêu thích
                   </button>
                 </div>
