@@ -76,9 +76,9 @@ function MessagesPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <h1 className="text-3xl font-extrabold text-gray-900">{TEXT.page_messages_title}</h1>
-        <div className="mt-8 grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6">
+      <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+        <h1 className="text-2xl font-extrabold text-gray-900 sm:text-3xl">{TEXT.page_messages_title}</h1>
+        <div className="mt-6 grid min-w-0 grid-cols-1 gap-4 lg:mt-8 lg:grid-cols-[320px_minmax(0,1fr)] lg:gap-6">
           <aside className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
             {threads.map((thread) => (
               <button
@@ -93,17 +93,17 @@ function MessagesPage() {
             ))}
           </aside>
 
-          <section className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden min-h-[520px] flex flex-col">
+          <section className="flex min-h-[60dvh] min-w-0 flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm lg:min-h-[520px]">
             {activeThread ? (
               <>
                 <div className="px-5 py-4 border-b border-gray-100">
                   <h2 className="font-bold text-gray-900">{activeThread.name}</h2>
                   <p className="text-sm text-gray-500">{activeThread.role}</p>
                 </div>
-                <div className="flex-1 p-5 space-y-3 overflow-y-auto bg-gray-50">
+                <div className="flex-1 space-y-3 overflow-y-auto bg-gray-50 p-3 sm:p-5">
                   {activeThread.messages.map((item, index) => (
                     <div key={index} className={`flex ${item.from === 'me' ? 'justify-end' : 'justify-start'}`}>
-                      <div className={`max-w-[75%] rounded-2xl px-4 py-3 text-sm ${item.from === 'me' ? 'bg-orange-500 text-white' : 'bg-white text-gray-700 border border-gray-100'}`}>
+                      <div className={`max-w-[88%] break-words rounded-2xl px-4 py-3 text-sm sm:max-w-[75%] ${item.from === 'me' ? 'bg-orange-500 text-white' : 'bg-white text-gray-700 border border-gray-100'}`}>
                         {item.text}
                       </div>
                     </div>
