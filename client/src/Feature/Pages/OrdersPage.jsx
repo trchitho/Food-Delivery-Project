@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Navbar from '../Components/Navbar'
+import PaymentMethodCard from '../Components/PaymentMethodCard'
+import PaymentSandboxInfo from '../Components/PaymentSandboxInfo'
 import { TEXT } from '../../constants/text'
 import {
   formatPrice,
@@ -245,17 +247,16 @@ function OrdersPage() {
 
             <section className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
               <h2 className="text-lg font-bold text-gray-900">Thanh toán</h2>
-              <div className="space-y-2 mt-4">
-                {[
-                  ['cod', 'Thanh toán khi nhận hàng'],
-                  ['bank', 'Chuyển khoản ngân hàng'],
-                  ['wallet', 'Ví điện tử'],
-                ].map(([value, label]) => (
-                  <label key={value} className="flex items-center gap-2 rounded-xl border border-gray-100 px-3 py-2">
-                    <input type="radio" name="payment" checked={paymentMethod === value} onChange={() => setPaymentMethod(value)} className="accent-orange-500" />
-                    <span className="text-sm font-medium text-gray-700">{label}</span>
-                  </label>
-                ))}
+              <div className="mt-4 space-y-3">
+                <PaymentMethodCard value="cod" selected={paymentMethod === 'cod'} onSelect={setPaymentMethod}
+                  badge="COD" title="Thanh toán khi nhận hàng" description="Thanh toán trực tiếp cho shipper" />
+                <PaymentMethodCard value="vnpay" selected={paymentMethod === 'vnpay'} onSelect={setPaymentMethod}
+                  badge="VN" title="VNPay Sandbox" description="ATM nội địa, Visa, Mastercard" />
+                <PaymentMethodCard value="zalopay" selected={paymentMethod === 'zalopay'} onSelect={setPaymentMethod}
+                  badge="Zalo" title="ZaloPay Sandbox" description="QR, Visa, Mastercard" />
+                <PaymentMethodCard value="momo" selected={false} onSelect={setPaymentMethod} disabled
+                  badge="MoMo" title="MoMo" description="Sắp ra mắt" />
+                <PaymentSandboxInfo method={paymentMethod} />
               </div>
             </section>
 
