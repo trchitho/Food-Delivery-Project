@@ -151,6 +151,9 @@ function ExploreRestaurant({ searchTerm = '', selectedCategory = 'Tất cả', l
             )})}
           </div>
         )}
+        {shouldPaginate && !loading && (
+          <PaginationControls page={page} totalPages={totalPages} onPageChange={setPage} />
+        )}
       </div>
     </div>
   )
