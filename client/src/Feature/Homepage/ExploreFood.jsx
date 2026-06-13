@@ -156,19 +156,19 @@ function ExploreFood({ searchTerm = '', selectedCategory = 'Tất cả', expande
         )}
       </div>
       {selectedFood && (
-        <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center px-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden">
-            <img src={getFoodImage(selectedFood, selectedFood.id)} alt={selectedFood.title} className="w-full h-56 object-cover bg-gray-100" />
-            <div className="p-5">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-3">
+          <div className="max-h-[calc(100dvh-24px)] w-full max-w-lg overflow-y-auto rounded-2xl bg-white shadow-2xl">
+            <img src={getFoodImage(selectedFood, selectedFood.id)} alt={selectedFood.title} className="h-48 w-full bg-gray-100 object-cover sm:h-56" />
+            <div className="p-4 sm:p-5">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <h3 className="text-2xl font-extrabold text-gray-900">{selectedFood.title}</h3>
+                  <h3 className="break-words text-xl font-extrabold text-gray-900 sm:text-2xl">{selectedFood.title}</h3>
                   <p className="text-sm text-gray-500 mt-1">{selectedFood.restaurantTitle || selectedFood.categoryName}</p>
                 </div>
-                <button onClick={() => setSelectedFood(null)} className="rounded-full bg-gray-100 h-9 w-9 text-gray-500 hover:bg-gray-200">×</button>
+                <button aria-label="Đóng chi tiết món" onClick={() => setSelectedFood(null)} className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200">×</button>
               </div>
               <p className="text-gray-600 mt-4">{selectedFood.description || 'Món ăn đang sẵn sàng phục vụ.'}</p>
-              <div className="flex gap-3 mt-6">
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
                 {selectedFood.restaurantId && (
                   <Link to={`/restaurant/detail/${selectedFood.restaurantId}`} className="flex-1 text-center rounded-xl bg-gray-100 px-4 py-3 text-sm font-semibold text-gray-800 hover:bg-gray-200">
                     Xem nhà hàng
