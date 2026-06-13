@@ -20,17 +20,18 @@ function Homepage() {
               {TEXT.hero_title_1}<br />{TEXT.hero_title_2}
             </h1>
             <p className="mb-7 max-w-xl text-base leading-relaxed text-orange-50 sm:text-lg">{TEXT.hero_subtitle}</p>
-            <div className="flex gap-2 bg-white rounded-2xl p-1.5 shadow-lg max-w-md">
+            <div className="flex w-full max-w-xl flex-col gap-2 rounded-2xl bg-white p-1.5 shadow-lg min-[380px]:flex-row">
               <input
+                aria-label="Tìm món ăn hoặc nhà hàng"
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder={TEXT.hero_search_placeholder}
-                className="flex-1 px-4 py-2 text-gray-800 text-sm rounded-xl outline-none placeholder-gray-400"
+                className="h-12 min-w-0 flex-1 rounded-xl px-4 text-sm text-gray-800 outline-none placeholder-gray-400 focus-visible:ring-2 focus-visible:ring-orange-400"
               />
               <button
                 onClick={() => document.getElementById('restaurants')?.scrollIntoView({ behavior: 'smooth' })}
-                className="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2 rounded-xl text-sm font-semibold transition-colors"
+                className="h-12 shrink-0 rounded-xl bg-orange-500 px-5 text-sm font-semibold text-white transition-colors hover:bg-orange-600 focus-visible:ring-2 focus-visible:ring-orange-400 focus-visible:ring-offset-2"
               >
                 {TEXT.hero_search_btn}
               </button>
