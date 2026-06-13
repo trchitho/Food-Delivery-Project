@@ -215,13 +215,13 @@ function NavbarAdmin({ title = 'Bảng điều khiển', subtitle = '', action, 
               </div>
             </div>
 
-            <div className="mt-4 flex gap-2 overflow-x-auto pb-1 lg:hidden">
+            <div className="mt-4 flex snap-x gap-2 overflow-x-auto pb-1 lg:hidden">
               {ADMIN_NAV.map((item) => (
                 <Link
                   key={item.href}
                   to={item.href}
                   className={[
-                    'whitespace-nowrap rounded-full px-4 py-2 text-sm font-bold',
+                    'min-h-11 shrink-0 snap-start whitespace-nowrap rounded-full px-4 py-2 text-sm font-bold',
                     isActive(item.href) ? 'bg-orange-500 text-white' : 'bg-slate-100 text-slate-600',
                   ].join(' ')}
                 >
@@ -232,7 +232,7 @@ function NavbarAdmin({ title = 'Bảng điều khiển', subtitle = '', action, 
           </div>
         </header>
 
-        <main className="px-4 py-6 sm:px-6 lg:px-8">{children}</main>
+        <main className="w-full min-w-0 overflow-x-hidden px-4 py-6 sm:px-6 lg:px-8">{children}</main>
       </div>
     </div>
   )
