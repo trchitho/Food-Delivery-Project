@@ -12,6 +12,7 @@ import com.thotran.fooddelivery.service.imp.FileServiceImp;
 import com.thotran.fooddelivery.service.imp.RestaurantServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.text.SimpleDateFormat;
@@ -53,6 +54,7 @@ public class RestaurantService implements RestaurantServiceImp {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<RestaurantDto> getRestaurantList() {
         List<RestaurantDto> restaurantDtos = new ArrayList<>();
         List<Restaurant> restaurantList = restaurantRepository.findAll();
@@ -91,6 +93,7 @@ public class RestaurantService implements RestaurantServiceImp {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public RestaurantDto getRestaurantDetail(int id) {
         Optional<Restaurant> restaurant = restaurantRepository.findById(id);
         RestaurantDto restaurantDto = new RestaurantDto();
