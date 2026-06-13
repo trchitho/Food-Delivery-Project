@@ -35,8 +35,7 @@ function RestaurantDetails() {
             : [{ ...food, restaurantId: Number(id), restaurantTitle: adminRestaurant?.title || apiDetail.title }, ...category.menus]
         })
         setRestaurantDetail({ ...apiDetail, ...(adminRestaurant || {}), categories: sanitizeCategoryMenus(categories) })
-      } catch (error) {
-        console.error(error)
+      } catch {
         setRestaurantDetail(getCatalogRestaurantDetail(id))
       } finally {
         setLoading(false)

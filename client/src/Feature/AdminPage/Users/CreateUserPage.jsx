@@ -42,8 +42,7 @@ function CreateUserPage() {
                 navigate('/admin/users', { replace: true });
             }
 
-        } catch (error) {
-            console.log(error);
+        } catch {
         }
     }
 

@@ -14,7 +14,6 @@ const fetchRestaurantDetail = async (id) => {
             headers: { Authorization: `Bearer ${token}` }
         });
         return response;
-    } catch (error) {
-        console.log(error);
+    } catch {
     }
 };

@@ -33,8 +33,7 @@ function ExploreFood({ searchTerm = '', selectedCategory = 'Tất cả', expande
       try {
         const res = await axios.get(`${API_BASE}/category`)
         setCategories(mergeCatalogCategories(res.data.data || []))
-      } catch (e) {
-        console.error(e)
+      } catch {
         setCategories(mergeCatalogCategories())
       } finally {
         setLoading(false)

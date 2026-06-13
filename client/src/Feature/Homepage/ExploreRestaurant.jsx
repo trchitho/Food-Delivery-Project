@@ -36,8 +36,7 @@ function ExploreRestaurant({ searchTerm = '', selectedCategory = 'Tất cả', l
       try {
         const res = await axios.get(`${API_BASE}/restaurant`)
         setRestaurants(mergeAdminRestaurants(res.data.data || []))
-      } catch (e) {
-        console.error(e)
+      } catch {
         setRestaurants(mergeAdminRestaurants())
       } finally {
         setLoading(false)
