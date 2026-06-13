@@ -42,17 +42,17 @@ function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-red-50 flex items-center justify-center px-4 py-10">
+    <div className="flex min-h-dvh items-center justify-center bg-gradient-to-br from-orange-50 via-white to-red-50 px-3 py-6 sm:px-4 sm:py-10">
       <div className="w-full max-w-md">
-        <Link to="/" className="inline-flex mb-6 text-sm font-semibold text-gray-500 hover:text-orange-500">
+        <Link to="/" className="mb-4 inline-flex min-h-11 items-center text-sm font-semibold text-gray-500 hover:text-orange-500 sm:mb-6">
           ← {TEXT.login_back_home}
         </Link>
-        <div className="bg-white rounded-3xl shadow-xl border border-orange-100 p-8">
-          <div className="text-center mb-8">
+        <div className="rounded-2xl border border-orange-100 bg-white p-5 shadow-xl sm:rounded-3xl sm:p-8">
+          <div className="mb-6 text-center sm:mb-8">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-orange-500 rounded-2xl mb-4 shadow-lg">
               <span className="text-3xl">🍜</span>
             </div>
-            <h1 className="text-2xl font-extrabold text-gray-900">{TEXT.signup_title}</h1>
+            <h1 className="text-xl font-extrabold text-gray-900 sm:text-2xl">{TEXT.signup_title}</h1>
             <p className="text-gray-500 text-sm mt-1">Tạo tài khoản để đặt món nhanh hơn.</p>
           </div>
 
