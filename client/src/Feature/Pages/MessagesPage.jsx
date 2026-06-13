@@ -109,14 +109,15 @@ function MessagesPage() {
                     </div>
                   ))}
                 </div>
-                <form onSubmit={sendMessage} className="p-4 border-t border-gray-100 flex gap-3">
+                <form onSubmit={sendMessage} className="flex flex-col gap-2 border-t border-gray-100 p-3 min-[380px]:flex-row sm:gap-3 sm:p-4">
                   <input
+                    aria-label="Nội dung tin nhắn"
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder="Nhập tin nhắn..."
-                    className="flex-1 rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-orange-400"
+                    className="h-12 min-w-0 flex-1 rounded-xl border border-gray-200 px-4 text-sm outline-none focus:ring-2 focus:ring-orange-400"
                   />
-                  <button className="rounded-xl bg-orange-500 px-5 py-3 text-sm font-bold text-white hover:bg-orange-600">Gửi</button>
+                  <button className="h-12 shrink-0 rounded-xl bg-orange-500 px-5 text-sm font-bold text-white hover:bg-orange-600 focus-visible:ring-2 focus-visible:ring-orange-400">Gửi</button>
                 </form>
               </>
             ) : (
