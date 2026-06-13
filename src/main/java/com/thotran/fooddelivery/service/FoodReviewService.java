@@ -46,4 +46,21 @@ public class FoodReviewService {
         return Map.of("canReview", canReview(username, foodId),
                 "review", existing.isEmpty() ? Map.of() : existing.get(0));
     }
+
+    public void save(String username, int foodId, int rating, String comment) {
+        String cleanComment = comment == null ? "" : comment.trim();
+        if (rating < 1 || rating > 5) throw new IllegalArgumentException("Số sao phải từ 1 đến 5.");
+        if (cleanComment.length() < 3 || cleanComment.length() > 500) {
+            throw new IllegalArgumentException("Nội dung đánh giá phải từ 3 đến 500 ký tự.");
+        }
+        if (!canReview(username, foodId)) {
+            throw new IllegalStateException("Bạn cần hoàn tất đơn chứa món này trước khi đánh giá.");
+        }
+        jdbc.update("""
+            INSERT INTO rating_food(content, rating_point, food_id, user_id)
+            VALUES (?, ?, ?, (SELECT id FROM users WHERE user_name = ?))
+            ON DUPLICATE KEY UPDATE content = VALUES(content),
+              rating_point = VALUES(rating_point)
+            """, cleanComment, rating, foodId, username);
+    }
 }
