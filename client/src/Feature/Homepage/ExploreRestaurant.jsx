@@ -58,19 +58,19 @@ function ExploreRestaurant({ searchTerm = '', selectedCategory = 'Tất cả', l
 
   return (
     <div id="restaurants" className="bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h2 className="text-2xl font-bold text-gray-900">{TEXT.restaurant_title}</h2>
+      <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+        <div className="mb-6 flex min-w-0 items-end justify-between gap-4">
+          <div className="min-w-0">
+            <h2 className="text-xl font-bold text-gray-900 sm:text-2xl">{TEXT.restaurant_title}</h2>
             <p className="text-sm text-gray-500 mt-1">{TEXT.restaurant_subtitle}</p>
           </div>
-          <Link to="/explore" className="text-sm font-semibold text-orange-500 hover:text-orange-600 transition-colors">
+          <Link to="/explore" className="shrink-0 text-sm font-semibold text-orange-500 transition-colors hover:text-orange-600">
             {TEXT.restaurant_view_all}
           </Link>
         </div>
 
         {loading ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 gap-4 min-[425px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 lg:gap-5">
             {[...Array(8)].map((_, i) => <SkeletonCard key={i} />)}
           </div>
         ) : visibleRestaurants.length === 0 ? (
@@ -80,16 +80,16 @@ function ExploreRestaurant({ searchTerm = '', selectedCategory = 'Tất cả', l
             <p className="text-sm mt-1">{TEXT.restaurant_empty_sub}</p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 gap-4 min-[425px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 lg:gap-5">
             {visibleRestaurants.map((r, i) => {
               const colorIndex = (Number(r.id) || i) % PLACEHOLDER_COLORS.length
               return (
               <Link
                 key={r.id}
                 to={`/restaurant/detail/${r.id}`}
-                className="group bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-200 overflow-hidden border border-gray-100"
+                className="group min-w-0 overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-200 hover:shadow-lg"
               >
-                <div className="relative h-44 overflow-hidden bg-gray-100">
+                <div className="relative aspect-[16/10] overflow-hidden bg-gray-100">
                   <img
                     src={getRestaurantImage(r)}
                     alt={r.title}
