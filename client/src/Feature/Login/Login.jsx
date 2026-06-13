@@ -40,15 +40,15 @@ function Login() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 flex items-center justify-center px-4">
+    <div className="flex min-h-dvh items-center justify-center bg-gradient-to-br from-orange-50 to-red-50 px-3 py-6 sm:px-4 sm:py-10">
       <div className="w-full max-w-md">
-        <div className="bg-white rounded-3xl shadow-xl p-8">
+        <div className="rounded-2xl bg-white p-5 shadow-xl sm:rounded-3xl sm:p-8">
           {/* Logo */}
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-orange-500 rounded-2xl mb-4 shadow-lg">
+          <div className="mb-6 text-center sm:mb-8">
+            <div className="mb-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-orange-500 shadow-lg sm:h-16 sm:w-16">
               <span className="text-3xl">🍜</span>
             </div>
-            <h1 className="text-2xl font-extrabold text-gray-900">{TEXT.login_welcome}</h1>
+            <h1 className="text-xl font-extrabold text-gray-900 sm:text-2xl">{TEXT.login_welcome}</h1>
             <p className="text-gray-500 text-sm mt-1">{TEXT.login_subtitle}</p>
           </div>
 
