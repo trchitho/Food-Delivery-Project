@@ -131,8 +131,11 @@ Food-Delivery-Project/
 │       └── index.js
 │
 ├── demo/                                 # Screenshots
-├── pom.xml                               # Maven dependencies
-└── seed_data.sql                         # Sample database data
+├── scripts/                              # MySQL migration and seed tools
+├── src/schema.sql                        # Idempotent MySQL schema
+├── src/seed_data.sql                     # Production catalog seed
+├── .env.example                          # Backend/DB environment template
+└── pom.xml                               # Maven dependencies
 ```
 
 ---
@@ -225,29 +228,35 @@ git clone https://github.com/your-username/Food-Delivery-Project.git
 cd Food-Delivery-Project
 ```
 
-### 2. Set up the database
+### 2. Configure the environment
 
-```sql
-CREATE DATABASE fooddelivery;
+Copy `.env.example` to `.env` and provide local credentials. Never commit the
+real `.env` file.
+
+```env
+DATABASE_URL=jdbc:mysql://localhost:3306/fooddelivery?useUnicode=true&characterEncoding=utf8&characterSetResults=utf8mb4&connectionCollation=utf8mb4_unicode_ci&useSSL=false&allowPublicKeyRetrieval=true
+DATABASE_USERNAME=root
+DATABASE_PASSWORD=your_local_password
+JWT_PRIVATE_KEY=your_base64_secret
+CORS_ALLOWED_ORIGINS=http://localhost:3000
 ```
 
-Then import sample data:
+### 3. Create and seed the database
 
 ```bash
-mysql -u root -p fooddelivery < seed_data.sql
+npm install
+npm run db:migrate
+npm run db:seed
 ```
 
-### 3. Configure the backend
+Useful database commands:
 
-Edit `src/main/resources/application.properties`:
-
-```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/fooddelivery
-spring.datasource.username=root
-spring.datasource.password=YOUR_PASSWORD
-
-fileUpload.rootPath=C:/uploads
-```
+| Command | Purpose |
+|---|---|
+| `npm run seed:generate` | Regenerate the deterministic catalog SQL |
+| `npm run db:migrate` | Apply `src/schema.sql` |
+| `npm run db:seed` | Apply schema and idempotent seed data |
+| `npm run db:reset` | Destructive local reset; requires `ALLOW_DB_RESET=true` |
 
 ### 4. Run the backend
 
@@ -283,21 +292,24 @@ Frontend starts on **http://localhost:3000**
 |---|---|---|
 | `admin` | `123456` | ADMIN |
 | `nguyenvana` | `123456` | USER |
-| `tranthib` | `123456` | USER |
 
 ---
 
 ## Environment Configuration
 
-| Property | Default | Description |
+| Variable | Default | Description |
 |---|---|---|
-| `spring.datasource.url` | `jdbc:mysql://localhost:3306/fooddelivery` | MySQL connection URL |
-| `spring.datasource.username` | `root` | MySQL username |
-| `spring.datasource.password` | *(set yours)* | MySQL password |
-| `jwt.privateKey` | *(base64 secret)* | Secret key for JWT signing |
-| `fileUpload.rootPath` | `C:/uploads` | Directory for uploaded images |
-| `spring.servlet.multipart.max-file-size` | `10MB` | Max upload file size |
-| `MYSQL_HOST` | `localhost` | Override MySQL host via env var |
+| `DATABASE_URL` | local JDBC URL | JDBC MySQL connection URL |
+| `DATABASE_USERNAME` | `root` | MySQL username |
+| `DATABASE_PASSWORD` | empty | MySQL password |
+| `DB_SSL` | `false` | Enable TLS when using split `DB_*` variables |
+| `DDL_AUTO` | `update` | Hibernate schema mode |
+| `DB_INIT_MODE` | `never` | Set to `always` only for the initial production seed |
+| `JWT_PRIVATE_KEY` | required | Base64 secret used to sign JWTs |
+| `JWT_EXPIRATION_MS` | `86400000` | Token lifetime |
+| `CORS_ALLOWED_ORIGINS` | `http://localhost:3000` | Comma-separated frontend origins |
+| `FILE_UPLOAD_ROOT` | `./uploads` | Writable upload directory |
+| `REACT_APP_API_BASE` | localhost in development | Public backend URL for React |
 
 ---
 
@@ -354,16 +366,40 @@ Required Vercel environment variable:
 REACT_APP_API_BASE=https://your-public-backend-url
 ```
 
-### Backend and Database
+### Backend and Database on Railway
 
-The Spring Boot API should run on a Java-capable host such as Render, Railway, Fly.io, or a VPS. The project includes a root `Dockerfile` for container deployment.
+The production topology is:
+
+```text
+Vercel React frontend -> Railway Spring Boot API -> Railway MySQL
+```
+
+Create a Railway MySQL service and reference its variables from the backend
+service. The root `Dockerfile` builds the Spring Boot API with Java 21.
 
 Required backend environment variables:
 
 ```env
-DATABASE_URL=jdbc:mysql://your-mysql-host:3306/fooddelivery?useUnicode=true&characterEncoding=utf8&characterSetResults=utf8mb4&connectionCollation=utf8mb4_0900_ai_ci
-DATABASE_USERNAME=your_database_user
-DATABASE_PASSWORD=your_database_password
+DATABASE_URL=jdbc:mysql://${{MySQL.MYSQLHOST}}:${{MySQL.MYSQLPORT}}/${{MySQL.MYSQLDATABASE}}?useUnicode=true&characterEncoding=utf8&characterSetResults=utf8mb4&connectionCollation=utf8mb4_unicode_ci&useSSL=false&allowPublicKeyRetrieval=true
+DATABASE_USERNAME=${{MySQL.MYSQLUSER}}
+DATABASE_PASSWORD=${{MySQL.MYSQLPASSWORD}}
 JWT_PRIVATE_KEY=replace-with-base64-secret
 CORS_ALLOWED_ORIGINS=https://your-vercel-app.vercel.app,http://localhost:3000
+NODE_ENV=production
+DDL_AUTO=update
+FILE_UPLOAD_ROOT=/tmp/uploads
 ```
+
+For the first deployment only, set `DB_INIT_MODE=always`. The packaged
+`schema.sql` and `seed_data.sql` create 8 categories, 48 restaurants and 480
+menu items without deleting existing users. After the first successful startup,
+change `DB_INIT_MODE` back to `never` and redeploy.
+
+Generate a Railway public domain for the backend, then set the Vercel Production
+environment:
+
+```env
+REACT_APP_API_BASE=https://your-backend.up.railway.app
+```
+
+Redeploy Vercel after changing this build-time React variable.
