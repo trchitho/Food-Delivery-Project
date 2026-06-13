@@ -9,7 +9,7 @@ function Homepage() {
   const [selectedCategory, setSelectedCategory] = useState('Tất cả')
 
   return (
-    <div className="min-h-dvh w-full overflow-x-hidden bg-gray-50">
+    <div className="min-h-dvh w-full overflow-x-hidden bg-gray-50 dark:bg-slate-950">
       <Navbar />
 
       {/* Hero Banner */}
@@ -41,7 +41,7 @@ function Homepage() {
       </div>
 
       {/* Category pills */}
-      <div className="sticky top-0 z-10 border-b border-gray-100 bg-white shadow-sm">
+      <div className="sticky top-0 z-10 border-b border-gray-100 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
         <div className="mx-auto w-full max-w-7xl">
           <div className="flex snap-x gap-3 overflow-x-auto px-4 py-3 sm:flex-wrap sm:justify-center sm:px-6 lg:px-8">
             {CATEGORY_PILLS.map((cat, i) => (
@@ -62,10 +62,10 @@ function Homepage() {
         </div>
       </div>
 
-      <ExploreRestaurant searchTerm={searchTerm} selectedCategory={selectedCategory} />
+      <ExploreRestaurant searchTerm={searchTerm} selectedCategory={selectedCategory} paginateAll />
       <ExploreFood searchTerm={searchTerm} selectedCategory={selectedCategory} />
 
-      <footer className="mt-8 bg-gray-800 px-4 py-6 text-center text-sm leading-relaxed text-gray-300">
+      <footer className="mt-8 bg-gray-800 px-4 py-6 text-center text-sm leading-relaxed text-gray-300 dark:bg-black">
         {TEXT.footer}
       </footer>
     </div>
