@@ -3,6 +3,7 @@ import { Menu, Transition } from '@headlessui/react'
 import { BellIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { clearCurrentUser, getCurrentUser } from '../../utils/foodData'
+import ThemeToggle from '../Components/ThemeToggle'
 
 const ADMIN_NAV = [
   { label: 'Tổng quan', href: '/admin', icon: '▦' },
@@ -70,8 +71,8 @@ function NavbarAdmin({ title = 'Bảng điều khiển', subtitle = '', action, 
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-950">
-      <aside className={`fixed inset-y-0 left-0 z-30 hidden border-r border-slate-200 bg-white transition-all duration-200 lg:flex lg:flex-col ${collapsed ? 'w-20' : 'w-72'}`}>
+    <div className="min-h-screen bg-slate-50 text-slate-950 dark:bg-slate-950 dark:text-slate-100">
+      <aside className={`fixed inset-y-0 left-0 z-30 hidden border-r border-slate-200 bg-white transition-all duration-200 dark:border-slate-800 dark:bg-slate-900 lg:flex lg:flex-col ${collapsed ? 'w-20' : 'w-72'}`}>
         <div className={`border-b border-slate-100 ${collapsed ? 'px-3 py-5' : 'px-6 py-6'}`}>
           <div className="flex items-start justify-between gap-3">
             {!collapsed && (
@@ -131,7 +132,7 @@ function NavbarAdmin({ title = 'Bảng điều khiển', subtitle = '', action, 
       </aside>
 
       <div className={`transition-all duration-200 ${collapsed ? 'lg:pl-20' : 'lg:pl-72'}`}>
-        <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/95 backdrop-blur">
+        <header className="sticky top-0 z-20 border-b border-slate-200 bg-white/95 backdrop-blur dark:border-slate-800 dark:bg-slate-900/95">
           <div className="px-4 py-4 sm:px-6 lg:px-8">
             <div className="flex min-w-0 flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
               <div className="min-w-0">
@@ -141,6 +142,7 @@ function NavbarAdmin({ title = 'Bảng điều khiển', subtitle = '', action, 
               </div>
               <div className="flex min-w-0 flex-wrap items-center gap-2 sm:gap-3">
                 {action}
+                <ThemeToggle className="rounded-lg" />
                 <Menu as="div" className="relative">
                   <Menu.Button aria-label="Mở thông báo quản trị" title="Thông báo" className="relative grid h-11 w-11 place-items-center rounded-lg border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-orange-300">
                     <BellIcon className="h-5 w-5" />
