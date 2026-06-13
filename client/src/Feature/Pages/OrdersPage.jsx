@@ -145,20 +145,20 @@ function OrdersPage() {
                 Giỏ hàng trống. Hãy chọn món từ trang chủ.
               </div>
             ) : cart.map((item, index) => (
-              <article key={item.id} className="bg-white border border-gray-100 rounded-2xl p-4 flex gap-4 shadow-sm">
-                <img src={getFoodImage(item.food, index)} alt={item.food.title} className="h-24 w-24 rounded-xl object-cover bg-gray-100" />
-                <div className="flex-1">
-                  <h2 className="font-bold text-gray-900">{item.food.title}</h2>
+              <article key={item.id} className="flex min-w-0 flex-wrap gap-3 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm sm:flex-nowrap sm:gap-4">
+                <img src={getFoodImage(item.food, index)} alt={item.food.title} className="h-20 w-20 shrink-0 rounded-xl bg-gray-100 object-cover sm:h-24 sm:w-24" />
+                <div className="min-w-0 flex-1">
+                  <h2 className="break-words font-bold text-gray-900">{item.food.title}</h2>
                   <p className="text-sm text-gray-500 mt-1">{item.restaurant?.title}</p>
                   <p className="text-sm font-semibold text-orange-600 mt-2">{formatPrice(item.food.price)}</p>
                 </div>
-                <div className="flex flex-col items-end justify-between">
+                <div className="flex w-full items-center justify-between gap-3 sm:w-auto sm:flex-col sm:items-end">
                   <div className="flex items-center rounded-xl border border-gray-200 overflow-hidden">
-                    <button onClick={() => changeQty(item.id, -1)} className="px-3 py-2 hover:bg-gray-50">−</button>
+                    <button aria-label="Giảm số lượng" onClick={() => changeQty(item.id, -1)} className="h-11 w-11 hover:bg-gray-50">−</button>
                     <span className="px-3 py-2 text-sm font-semibold">{item.quantity || 1}</span>
-                    <button onClick={() => changeQty(item.id, 1)} className="px-3 py-2 hover:bg-gray-50">+</button>
+                    <button aria-label="Tăng số lượng" onClick={() => changeQty(item.id, 1)} className="h-11 w-11 hover:bg-gray-50">+</button>
                   </div>
-                  <button onClick={() => removeItem(item.id)} className="text-sm font-semibold text-red-500">Xóa</button>
+                  <button onClick={() => removeItem(item.id)} className="min-h-11 px-2 text-sm font-semibold text-red-500">Xóa</button>
                 </div>
               </article>
             ))}
