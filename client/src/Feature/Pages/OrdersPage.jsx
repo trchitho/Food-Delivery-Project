@@ -123,13 +123,13 @@ function OrdersPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        <div className="flex items-end justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-extrabold text-gray-900">Giỏ hàng và đặt món</h1>
+      <main className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div className="min-w-0">
+            <h1 className="text-2xl font-extrabold text-gray-900 sm:text-3xl">Giỏ hàng và đặt món</h1>
             <p className="text-gray-500 mt-1">Kiểm tra món, số lượng, giao hàng và thanh toán.</p>
           </div>
-          <Link to="/" className="text-sm font-semibold text-orange-500">Tiếp tục chọn món</Link>
+          <Link to="/" className="inline-flex min-h-11 items-center text-sm font-semibold text-orange-500">Tiếp tục chọn món</Link>
         </div>
 
         {success && (
@@ -138,8 +138,8 @@ function OrdersPage() {
           </div>
         )}
 
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6 mt-8">
-          <section className="space-y-4">
+        <div className="mt-6 grid min-w-0 grid-cols-1 gap-6 lg:mt-8 lg:grid-cols-[minmax(0,1fr)_minmax(320px,380px)]">
+          <section className="min-w-0 space-y-4">
             {cart.length === 0 ? (
               <div className="bg-white border border-gray-100 rounded-2xl p-10 text-gray-500">
                 Giỏ hàng trống. Hãy chọn món từ trang chủ.
