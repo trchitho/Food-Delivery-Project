@@ -23,6 +23,9 @@ function OrdersPage() {
   const [note, setNote] = useState('')
   const [success, setSuccess] = useState('')
   const [selectedOrder, setSelectedOrder] = useState(null)
+  const [locationPrompt, setLocationPrompt] = useState(false)
+  const [locationStatus, setLocationStatus] = useState('')
+  const [locating, setLocating] = useState(false)
 
   useEffect(() => {
     setCart(getOrders())
@@ -74,6 +77,29 @@ function OrdersPage() {
 
   const updateProfile = (field, value) => {
     setProfile((current) => ({ ...current, [field]: value }))
+  }
+
+  const useCurrentLocation = () => {
+    if (!navigator.geolocation) return setLocationStatus('Trình duyệt không hỗ trợ định vị.')
+    setLocating(true)
+    navigator.geolocation.getCurrentPosition(async ({ coords }) => {
+      try {
+        const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${coords.latitude}&lon=${coords.longitude}`
+        const response = await fetch(url, { headers: { 'Accept-Language': 'vi' } })
+        const data = await response.json()
+        updateProfile('address', data.display_name || `${coords.latitude}, ${coords.longitude}`)
+        const accuracy = Math.round(coords.accuracy)
+        setLocationStatus(accuracy <= 10
+          ? `Vị trí hiện tại đã được lấy, độ chính xác khoảng ${accuracy} mét.`
+          : `Độ chính xác hiện tại khoảng ${accuracy} mét, vui lòng kiểm tra lại địa chỉ.`)
+      } catch {
+        updateProfile('address', `${coords.latitude}, ${coords.longitude}`)
+        setLocationStatus('Đã lấy tọa độ. Vui lòng kiểm tra và bổ sung địa chỉ.')
+      } finally { setLocating(false); setLocationPrompt(false) }
+    }, (error) => {
+      setLocating(false)
+      setLocationStatus(error.code === 1 ? 'Bạn đã từ chối quyền truy cập vị trí. Vui lòng nhập địa chỉ thủ công.' : 'Không thể lấy vị trí hiện tại. Vui lòng thử lại hoặc nhập thủ công.')
+    }, { enableHighAccuracy: true, timeout: 12000, maximumAge: 5000 })
   }
 
   const placeOrder = () => {
