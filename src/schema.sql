@@ -11,6 +11,8 @@ CREATE TABLE IF NOT EXISTS roles (
 CREATE TABLE IF NOT EXISTS users (
     id INT NOT NULL AUTO_INCREMENT,
     create_date DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+    status VARCHAR(32) NOT NULL DEFAULT 'PENDING',
+    payment_status VARCHAR(32) NOT NULL DEFAULT 'UNPAID',
     fullname VARCHAR(100) NOT NULL,
     password VARCHAR(255) NOT NULL,
     user_name VARCHAR(150) NOT NULL,
@@ -111,11 +113,15 @@ CREATE TABLE IF NOT EXISTS rating_food (
     id INT NOT NULL AUTO_INCREMENT,
     content VARCHAR(500) NULL,
     rating_point INT NOT NULL,
+    created_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+    updated_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
     food_id INT NOT NULL,
     user_id INT NOT NULL,
     PRIMARY KEY (id),
     KEY idx_rating_food_food (food_id),
     KEY idx_rating_food_user (user_id),
+    UNIQUE KEY uk_rating_food_user_food (user_id, food_id),
+    CONSTRAINT chk_rating_food_point CHECK (rating_point BETWEEN 1 AND 5),
     CONSTRAINT fk_rating_food_food FOREIGN KEY (food_id) REFERENCES food (id),
     CONSTRAINT fk_rating_food_user FOREIGN KEY (user_id) REFERENCES users (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
