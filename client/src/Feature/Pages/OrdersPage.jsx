@@ -1,3 +1,4 @@
+import axios from 'axios'
 import React, { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Navbar from '../Components/Navbar'
@@ -6,6 +7,8 @@ import PaymentSandboxInfo from '../Components/PaymentSandboxInfo'
 import { TEXT } from '../../constants/text'
 import {
   formatPrice,
+  API_BASE,
+  getAuthToken,
   getFoodImage,
   getOrders,
   getPlacedOrders,
@@ -104,10 +107,22 @@ function OrdersPage() {
     }, { enableHighAccuracy: true, timeout: 12000, maximumAge: 5000 })
   }
 
-  const placeOrder = () => {
+  const placeOrder = async () => {
     if (!profile.phone.trim() || !profile.address.trim()) {
       setSuccess('Vui lòng nhập số điện thoại và địa chỉ giao hàng.')
       return
+    }
+    if (paymentMethod !== 'cod') {
+      try {
+        const response = await axios.post(`${API_BASE}/payments/create`,
+          { method: paymentMethod, amount: total, orderId: `FH${Date.now()}` },
+          { headers: { Authorization: `Bearer ${getAuthToken()}` } })
+        if (response.data.paymentUrl) window.location.assign(response.data.paymentUrl)
+        return
+      } catch (error) {
+        setSuccess(error.response?.data?.message || 'Không thể khởi tạo thanh toán.')
+        return
+      }
     }
     const order = {
       id: `FH${Date.now()}`,
