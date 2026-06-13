@@ -100,7 +100,7 @@ function Navbar() {
                     leaveFrom="transform opacity-100 scale-100"
                     leaveTo="transform opacity-0 scale-95"
                   >
-                    <Menu.Items className="absolute right-0 z-30 mt-3 w-80 origin-top-right overflow-hidden rounded-2xl bg-white shadow-xl ring-1 ring-black/5 focus:outline-none sm:w-96">
+                    <Menu.Items className="fixed inset-x-3 top-16 z-30 max-h-[calc(100dvh-5rem)] origin-top-right overflow-y-auto rounded-2xl bg-white shadow-xl ring-1 ring-black/5 focus:outline-none sm:absolute sm:inset-x-auto sm:right-0 sm:top-auto sm:mt-3 sm:w-96">
                       <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3">
                         <p className="text-sm font-black text-gray-950">Thông báo</p>
                         <Menu.Item>
@@ -157,9 +157,9 @@ function Navbar() {
 
                 {isLoggedIn ? (
                   <Menu as="div" className="relative">
-                    <Menu.Button className="flex items-center gap-2 rounded-full bg-orange-500 px-3 py-2 text-sm font-semibold text-white focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2 focus:ring-offset-gray-900">
+                    <Menu.Button aria-label={`Mở tài khoản ${accountName}`} className="flex h-11 max-w-[7rem] items-center gap-2 rounded-full bg-orange-500 px-2.5 text-sm font-semibold text-white focus-visible:ring-2 focus-visible:ring-orange-400 sm:max-w-[12rem] sm:px-3">
                       <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-white/20">{accountInitial}</span>
-                      <span className="hidden sm:inline">{accountName}</span>
+                      <span className="hidden truncate min-[425px]:inline">{accountName}</span>
                     </Menu.Button>
                     <Transition
                       as={Fragment}
@@ -170,7 +170,7 @@ function Navbar() {
                       leaveFrom="transform opacity-100 scale-100"
                       leaveTo="transform opacity-0 scale-95"
                     >
-                      <Menu.Items className="absolute right-0 z-20 mt-2 w-48 origin-top-right rounded-xl bg-white py-1 shadow-xl ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      <Menu.Items className="absolute right-0 z-20 mt-2 w-48 max-w-[calc(100vw-1.5rem)] origin-top-right rounded-xl bg-white py-1 shadow-xl ring-1 ring-black ring-opacity-5 focus:outline-none">
                         <Menu.Item>
                           {({ active }) => (
                             <Link to="/profile" className={classNames(active ? 'bg-gray-50' : '', 'flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700')}>
@@ -202,7 +202,7 @@ function Navbar() {
                 ) : (
                   <Link
                     to="/login"
-                    className="bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
+                    className="inline-flex h-10 items-center rounded-lg bg-orange-500 px-3 text-xs font-semibold text-white transition-colors hover:bg-orange-600 sm:h-11 sm:px-4 sm:text-sm"
                   >
                     {TEXT.nav_login}
                   </Link>
@@ -212,14 +212,14 @@ function Navbar() {
           </div>
 
           {/* Mobile menu */}
-          <Disclosure.Panel className="sm:hidden border-t border-gray-700">
-            <div className="space-y-1 px-3 pb-3 pt-2">
+          <Disclosure.Panel className="border-t border-gray-700 sm:hidden">
+            <div className="space-y-1 px-3 pb-4 pt-2">
               {NAV_ITEMS.map((item) => (
                 <Disclosure.Button
                   key={item.key}
                   as="a"
                   href={item.href}
-                  className="block rounded-lg px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+                  className="flex min-h-11 items-center rounded-lg px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
                 >
                   {TEXT[item.key]}
                 </Disclosure.Button>
