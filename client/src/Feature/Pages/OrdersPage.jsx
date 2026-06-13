@@ -230,14 +230,14 @@ function OrdersPage() {
           </aside>
         </div>
         {selectedOrder && (
-          <div className="fixed inset-0 z-50 grid place-items-center bg-gray-950/50 px-4">
-            <div className="max-h-[90vh] w-full max-w-3xl overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <h2 className="text-2xl font-extrabold text-gray-900">Chi tiết đơn {selectedOrder.id}</h2>
+          <div className="fixed inset-0 z-50 grid place-items-center bg-gray-950/50 p-3">
+            <div className="max-h-[calc(100dvh-24px)] w-full max-w-3xl overflow-y-auto rounded-2xl bg-white p-4 shadow-2xl sm:p-6">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div className="min-w-0">
+                  <h2 className="break-words text-xl font-extrabold text-gray-900 sm:text-2xl">Chi tiết đơn {selectedOrder.id}</h2>
                   <p className="mt-1 text-sm text-gray-500">{selectedOrder.createdAt ? new Date(selectedOrder.createdAt).toLocaleString('vi-VN') : 'Chưa có thời gian'}</p>
                 </div>
-                <button onClick={() => setSelectedOrder(null)} className="rounded-xl border border-gray-200 px-4 py-2 text-sm font-bold text-gray-700">Đóng</button>
+                <button onClick={() => setSelectedOrder(null)} className="min-h-11 self-start rounded-xl border border-gray-200 px-4 py-2 text-sm font-bold text-gray-700">Đóng</button>
               </div>
               <div className="mt-5 grid grid-cols-1 gap-3 md:grid-cols-3">
                 <div className="rounded-xl bg-gray-50 p-4">
@@ -261,14 +261,14 @@ function OrdersPage() {
               </div>
               <div className="mt-5 overflow-hidden rounded-xl border border-gray-100">
                 {(selectedOrder.items || []).map((item, index) => (
-                  <div key={item.id || index} className="flex items-center gap-4 border-b border-gray-100 p-4">
+                  <div key={item.id || index} className="flex min-w-0 flex-wrap items-center gap-3 border-b border-gray-100 p-3 sm:flex-nowrap sm:gap-4 sm:p-4">
                     <img src={getFoodImage(item.food, index)} alt={item.food?.title} className="h-16 w-16 rounded-xl object-cover bg-gray-100" />
-                    <div className="flex-1">
+                    <div className="min-w-0 flex-1">
                       <p className="font-bold text-gray-900">{item.food?.title}</p>
                       <p className="text-sm text-gray-500">{item.restaurant?.title}</p>
                     </div>
                     <p className="text-sm font-semibold text-gray-700">x{item.quantity || 1}</p>
-                    <p className="font-bold text-orange-600">{formatPrice((item.food?.price || 0) * (item.quantity || 1))}</p>
+                    <p className="ml-auto font-bold text-orange-600">{formatPrice((item.food?.price || 0) * (item.quantity || 1))}</p>
                   </div>
                 ))}
               </div>
