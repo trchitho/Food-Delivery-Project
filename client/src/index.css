@@ -26,3 +26,29 @@ body {
 img {
   max-width: 100%;
 }
+
+html.dark body,
+html.dark #root {
+  background-color: #0f172a;
+  color: #e2e8f0;
+}
+
+html.dark .bg-white {
+  background-color: #111827;
+}
+
+html.dark .bg-gray-50,
+html.dark .bg-gray-100 {
+  background-color: #0f172a;
+}
+
+html.dark .text-gray-900,
+html.dark .text-gray-800 {
+  color: #f8fafc;
+}
+
+html.dark .text-gray-700,
+html.dark .text-gray-600,
+html.dark .text-gray-500 {
+  color: #cbd5e1;
+}
