@@ -9,17 +9,17 @@ function Homepage() {
   const [selectedCategory, setSelectedCategory] = useState('Tất cả')
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-dvh w-full overflow-x-hidden bg-gray-50">
       <Navbar />
 
       {/* Hero Banner */}
       <div className="bg-gradient-to-r from-orange-500 to-red-500 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-          <div className="max-w-xl">
-            <h1 className="text-4xl font-extrabold leading-tight mb-3">
+        <div className="mx-auto w-full max-w-7xl px-5 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
+          <div className="max-w-2xl">
+            <h1 className="mb-4 text-[clamp(2rem,10vw,3.75rem)] font-extrabold leading-[1.08]">
               {TEXT.hero_title_1}<br />{TEXT.hero_title_2}
             </h1>
-            <p className="text-orange-100 text-base mb-6">{TEXT.hero_subtitle}</p>
+            <p className="mb-7 max-w-xl text-base leading-relaxed text-orange-50 sm:text-lg">{TEXT.hero_subtitle}</p>
             <div className="flex gap-2 bg-white rounded-2xl p-1.5 shadow-lg max-w-md">
               <input
                 type="text"
@@ -64,7 +64,7 @@ function Homepage() {
       <ExploreRestaurant searchTerm={searchTerm} selectedCategory={selectedCategory} />
       <ExploreFood searchTerm={searchTerm} selectedCategory={selectedCategory} />
 
-      <footer className="bg-gray-800 text-gray-400 text-center py-6 text-sm mt-8">
+      <footer className="mt-8 bg-gray-800 px-4 py-6 text-center text-sm leading-relaxed text-gray-300">
         {TEXT.footer}
       </footer>
     </div>
