@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.lang.reflect.Type;
@@ -27,6 +28,7 @@ public class CategoryService implements CategoryServiceImp {
 
     private Gson gson = new Gson();
     @Override
+    @Transactional(readOnly = true)
     public List<CategoryDto> getCategoryHomepage() {
 
         String dataRedis = null;
