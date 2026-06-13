@@ -55,3 +55,23 @@ function FoodReviewSection({ foodId }) {
         <div className="text-right"><p className="text-3xl font-black text-orange-500">{average.toFixed(1)}</p>
           <RatingStars value={Math.round(average)} readonly /></div>
       </div>
+      <div className="mt-6 space-y-3">
+        {reviews.length === 0 ? (
+          <p className="rounded-2xl bg-gray-50 p-5 text-gray-500 dark:bg-slate-800">
+            Chưa có đánh giá nào cho món này.
+          </p>
+        ) : reviews.map((review) => (
+          <article key={review.id} className="rounded-2xl border border-gray-100 p-4 dark:border-slate-700">
+            <div className="flex items-center justify-between gap-3">
+              <p className="font-bold">{review.userName}</p>
+              <RatingStars value={Number(review.rating)} readonly />
+            </div>
+            <p className="mt-2 text-sm leading-6 text-gray-600 dark:text-slate-300">{review.comment}</p>
+          </article>
+        ))}
+      </div>
+      {!loggedIn && (
+        <div className="mt-6 rounded-2xl bg-orange-50 p-4 text-sm text-orange-800">
+          <Link to="/login" className="font-black underline">Đăng nhập</Link> để đánh giá món ăn.
+        </div>
+      )}
