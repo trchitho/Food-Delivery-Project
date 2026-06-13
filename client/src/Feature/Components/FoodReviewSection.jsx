@@ -75,3 +75,29 @@ function FoodReviewSection({ foodId }) {
           <Link to="/login" className="font-black underline">Đăng nhập</Link> để đánh giá món ăn.
         </div>
       )}
+      {loggedIn && eligibility && !eligibility.canReview && (
+        <p className="mt-6 rounded-2xl bg-amber-50 p-4 text-sm font-semibold text-amber-800">
+          Bạn cần đặt và nhận món này thành công trước khi đánh giá.
+        </p>
+      )}
+      {eligibility?.canReview && (
+        <form onSubmit={submitReview} className="mt-6 space-y-4 border-t border-gray-100 pt-6 dark:border-slate-700">
+          <div><label className="text-sm font-bold">Số sao</label>
+            <RatingStars value={rating} onChange={setRating} /></div>
+          <div>
+            <label htmlFor="review-comment" className="text-sm font-bold">Nội dung đánh giá</label>
+            <textarea id="review-comment" required minLength="3" maxLength="500" rows="4"
+              value={comment} onChange={(event) => setComment(event.target.value)}
+              className="mt-2 w-full rounded-2xl border border-gray-200 p-3 focus-visible:ring-2 focus-visible:ring-orange-500" />
+          </div>
+          {message && <p className="text-sm font-semibold text-orange-600">{message}</p>}
+          <button type="submit" className="min-h-11 rounded-xl bg-orange-500 px-5 font-bold text-white hover:bg-orange-600">
+            {eligibility.review?.rating ? 'Cập nhật đánh giá' : 'Gửi đánh giá'}
+          </button>
+        </form>
+      )}
+    </section>
+  )
+}
+
+export default FoodReviewSection
