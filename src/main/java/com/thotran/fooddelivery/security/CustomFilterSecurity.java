@@ -50,7 +50,7 @@ public class CustomFilterSecurity {
                 .authorizeHttpRequests(request -> {
                     request
                             .requestMatchers("/client/login", "/client/signup").permitAll()
-                            .requestMatchers(HttpMethod.GET, "/restaurant/**", "/category/**", "/menu/file/**").permitAll()
+                            .requestMatchers(HttpMethod.GET, "/restaurant/**", "/category/**", "/menu/file/**", "/reviews/food/*").permitAll()
                             .requestMatchers("/user/**").hasRole("ADMIN")
                             .requestMatchers(HttpMethod.POST, "/restaurant/**", "/menu/**").hasRole("ADMIN")
                             .requestMatchers(HttpMethod.PUT, "/restaurant/**", "/menu/**").hasRole("ADMIN")
