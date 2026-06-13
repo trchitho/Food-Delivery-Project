@@ -83,14 +83,14 @@ function RestaurantDetails() {
   return (
     <main className="bg-gray-50 min-h-screen">
       <section className="bg-white border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-8 items-center">
-            <div>
+        <div className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
+          <div className="grid min-w-0 grid-cols-1 items-center gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:gap-8">
+            <div className="min-w-0">
               <Link to="/" className="text-sm font-semibold text-orange-500 hover:text-orange-600">
                 ← {TEXT.detail_back_home}
               </Link>
-              <h1 className="text-4xl font-extrabold text-gray-900 mt-4">{restaurantDetail.title}</h1>
-              <p className="text-lg text-gray-600 mt-2">{restaurantDetail.subtitle}</p>
+              <h1 className="mt-4 break-words text-3xl font-extrabold text-gray-900 sm:text-4xl">{restaurantDetail.title}</h1>
+              <p className="mt-2 text-base text-gray-600 sm:text-lg">{restaurantDetail.subtitle}</p>
               <p className="text-gray-600 mt-5 leading-7">{restaurantDetail.description}</p>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-6">
@@ -114,13 +114,13 @@ function RestaurantDetails() {
 
               <button
                 onClick={() => handleOrder()}
-                className="mt-7 inline-flex items-center justify-center rounded-xl bg-orange-500 px-6 py-3 text-sm font-bold text-white hover:bg-orange-600 transition-colors"
+                className="mt-7 inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-orange-500 px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-orange-600 sm:w-auto"
               >
                 {isLoggedIn() ? TEXT.detail_order : TEXT.detail_login_to_order}
               </button>
             </div>
 
-            <div className="h-80 lg:h-96 overflow-hidden rounded-2xl bg-gray-100 shadow-sm">
+            <div className="aspect-[16/10] overflow-hidden rounded-2xl bg-gray-100 shadow-sm lg:h-96 lg:aspect-auto">
               <img
                 src={getRestaurantImage(restaurantDetail, Number(id))}
                 alt={restaurantDetail.title}
