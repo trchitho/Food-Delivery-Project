@@ -79,16 +79,16 @@ function ExploreFood({ searchTerm = '', selectedCategory = 'Tất cả', expande
 
   return (
     <div className="bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">{TEXT.food_title}</h2>
+            <h2 className="text-xl font-bold text-gray-900 sm:text-2xl">{TEXT.food_title}</h2>
             <p className="text-sm text-gray-500 mt-1">{TEXT.food_subtitle}</p>
           </div>
         </div>
 
         {loading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
             {[...Array(4)].map((_, i) => <SkeletonCategory key={i} />)}
           </div>
         ) : filteredCategories.length === 0 ? (
@@ -114,7 +114,7 @@ function ExploreFood({ searchTerm = '', selectedCategory = 'Tất cả', expande
                       <div
                         key={item.id}
                         onClick={() => navigate(`/food/detail/${item.id}`)}
-                        className="flex items-center gap-3 p-2 rounded-xl hover:bg-orange-50 cursor-pointer transition-colors group"
+                        className="group flex min-h-20 min-w-0 cursor-pointer items-center gap-3 rounded-xl p-2 transition-colors hover:bg-orange-50 focus-within:bg-orange-50"
                       >
                         <div className="w-14 h-14 rounded-xl overflow-hidden flex-shrink-0 bg-gray-100">
                           <img
@@ -144,7 +144,7 @@ function ExploreFood({ searchTerm = '', selectedCategory = 'Tất cả', expande
                   <div className="px-4 pb-3 pt-1">
                     <button
                       onClick={() => setExpandedCategories((current) => ({ ...current, [cat.id]: !current[cat.id] }))}
-                      className="w-full text-center text-xs font-semibold text-orange-500 hover:text-orange-600 py-1.5 border border-orange-100 rounded-xl hover:bg-orange-50 transition-colors"
+                      className="min-h-11 w-full rounded-xl border border-orange-100 py-2 text-center text-xs font-semibold text-orange-500 transition-colors hover:bg-orange-50 hover:text-orange-600 focus-visible:ring-2 focus-visible:ring-orange-400"
                     >
                       {expandedCategories[cat.id] ? 'Thu gọn' : TEXT.food_view_more}
                     </button>
