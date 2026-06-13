@@ -42,15 +42,15 @@ function FoodDetailPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
-      <main className="max-w-6xl mx-auto px-4 py-10">
+      <main className="mx-auto w-full max-w-6xl px-4 py-6 sm:py-10">
         <Link to={restaurant?.id ? `/restaurant/detail/${restaurant.id}` : '/'} className="text-sm font-bold text-orange-500">← Quay lại</Link>
-        <section className="mt-5 grid grid-cols-1 gap-8 rounded-3xl border border-gray-100 bg-white p-5 shadow-sm lg:grid-cols-[1fr_0.9fr]">
-          <img src={food.image || getFoodImage(food)} alt={food.title} className="h-[420px] w-full rounded-2xl object-cover bg-gray-100" />
-          <div className="flex flex-col">
+        <section className="mt-5 grid min-w-0 grid-cols-1 gap-6 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm sm:rounded-3xl sm:p-5 lg:grid-cols-[1fr_0.9fr] lg:gap-8">
+          <img src={food.image || getFoodImage(food)} alt={food.title} className="aspect-square w-full rounded-2xl bg-gray-100 object-cover sm:aspect-[4/3] lg:h-[420px] lg:aspect-auto" />
+          <div className="flex min-w-0 flex-col">
             <p className="text-sm font-bold text-orange-500">{food.categoryName}</p>
-            <h1 className="mt-2 text-4xl font-black text-gray-900">{food.title}</h1>
+            <h1 className="mt-2 break-words text-3xl font-black text-gray-900 sm:text-4xl">{food.title}</h1>
             <p className="mt-4 text-gray-600 leading-7">{food.description || 'Món ăn đang được nhà hàng cập nhật mô tả chi tiết.'}</p>
-            <div className="mt-6 grid grid-cols-2 gap-3">
+            <div className="mt-6 grid grid-cols-1 gap-3 min-[380px]:grid-cols-2">
               <div className="rounded-2xl bg-orange-50 p-4"><p className="text-xs font-bold text-orange-600">Giá bán</p><p className="mt-1 text-2xl font-black text-orange-700">{formatPrice(food.price)}</p></div>
               <div className="rounded-2xl bg-slate-50 p-4"><p className="text-xs font-bold text-slate-500">Thời gian giao</p><p className="mt-1 text-2xl font-black text-slate-900">{food.timeShip || '20-30 phút'}</p></div>
               <div className="rounded-2xl bg-green-50 p-4"><p className="text-xs font-bold text-green-600">Ưu đãi</p><p className="mt-1 font-black text-green-800">{food.freeShip ? 'Miễn phí giao hàng' : 'Giao hàng tiêu chuẩn'}</p></div>
@@ -60,7 +60,7 @@ function FoodDetailPage() {
               <p><span className="font-bold text-gray-900">Mô tả nhà hàng:</span> {restaurant?.subtitle || restaurant?.description || 'Đang cập nhật'}</p>
               <p className="mt-2"><span className="font-bold text-gray-900">Địa chỉ:</span> {restaurant?.address || 'Đang cập nhật'}</p>
             </div>
-            <button onClick={orderFood} className="mt-auto rounded-2xl bg-orange-500 px-6 py-4 text-sm font-black text-white hover:bg-orange-600">Đặt món này</button>
+            <button onClick={orderFood} className="mt-6 min-h-12 rounded-2xl bg-orange-500 px-6 py-3 text-sm font-black text-white hover:bg-orange-600 lg:mt-auto">Đặt món này</button>
           </div>
         </section>
       </main>
