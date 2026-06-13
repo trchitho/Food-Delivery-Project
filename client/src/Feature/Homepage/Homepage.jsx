@@ -41,14 +41,14 @@ function Homepage() {
       </div>
 
       {/* Category pills */}
-      <div className="bg-white border-b border-gray-100 sticky top-0 z-10 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex gap-2 py-3 overflow-x-auto">
+      <div className="sticky top-0 z-10 border-b border-gray-100 bg-white shadow-sm">
+        <div className="mx-auto w-full max-w-7xl">
+          <div className="flex snap-x gap-3 overflow-x-auto px-4 py-3 sm:flex-wrap sm:justify-center sm:px-6 lg:px-8">
             {CATEGORY_PILLS.map((cat, i) => (
               <button
                 key={i}
                 onClick={() => setSelectedCategory(cat.label)}
-                className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
+                className={`flex min-h-11 shrink-0 snap-start items-center gap-1.5 whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-orange-400 ${
                   selectedCategory === cat.label
                     ? 'bg-orange-500 text-white'
                     : 'bg-gray-100 text-gray-600 hover:bg-orange-50 hover:text-orange-500'
