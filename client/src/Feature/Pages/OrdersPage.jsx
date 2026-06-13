@@ -217,7 +217,28 @@ function OrdersPage() {
               <div className="space-y-3 mt-4">
                 <input value={profile.fullname} onChange={(e) => updateProfile('fullname', e.target.value)} placeholder="Họ và tên" className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-orange-400" />
                 <input value={profile.phone} onChange={(e) => updateProfile('phone', e.target.value)} placeholder="Số điện thoại" className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-orange-400" />
-                <textarea value={profile.address} onChange={(e) => updateProfile('address', e.target.value)} rows="3" placeholder="Địa chỉ giao hàng" className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-orange-400" />
+                <div>
+                  <label htmlFor="delivery-address" className="mb-2 block text-sm font-bold text-gray-700">Địa chỉ giao hàng</label>
+                  <textarea id="delivery-address" value={profile.address}
+                    onFocus={() => !profile.address && setLocationPrompt(true)}
+                    onChange={(e) => updateProfile('address', e.target.value)} rows="3"
+                    placeholder="Số nhà, đường, phường/xã, quận/huyện..."
+                    className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-orange-400" />
+                  {locationPrompt && (
+                    <div className="mt-2 rounded-xl bg-orange-50 p-3 text-sm text-orange-900">
+                      <p className="font-bold">Muốn lấy địa chỉ chính xác hiện tại không?</p>
+                      <div className="mt-2 flex gap-2">
+                        <button type="button" disabled={locating} onClick={useCurrentLocation}
+                          className="min-h-11 rounded-lg bg-orange-500 px-4 font-bold text-white disabled:opacity-50">
+                          {locating ? 'Đang lấy...' : 'Có'}
+                        </button>
+                        <button type="button" onClick={() => setLocationPrompt(false)}
+                          className="min-h-11 rounded-lg border border-orange-200 px-4 font-bold">Không</button>
+                      </div>
+                    </div>
+                  )}
+                  {locationStatus && <p className="mt-2 text-xs text-gray-500">{locationStatus}</p>}
+                </div>
                 <textarea value={note} onChange={(e) => setNote(e.target.value)} rows="2" placeholder="Ghi chú cho shipper/nhà hàng" className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-orange-400" />
               </div>
             </section>
